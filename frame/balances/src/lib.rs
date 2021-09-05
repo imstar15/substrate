@@ -177,7 +177,7 @@ use sp_runtime::{
 		AtLeast32BitUnsigned, Bounded, CheckedAdd, CheckedSub, MaybeSerializeDeserialize,
 		Saturating, StaticLookup, Zero,
 	},
-	ArithmeticError, DispatchError, DispatchResult, RuntimeDebug,
+	ArithmeticError, DispatchError, DispatchResult, RuntimeDebug, print,
 };
 use sp_std::{cmp, fmt::Debug, mem, ops::BitOr, prelude::*, result};
 pub use weights::WeightInfo;
@@ -1631,23 +1631,29 @@ where
 		reasons: WithdrawReasons,
 		liveness: ExistenceRequirement,
 	) -> result::Result<Self::NegativeImbalance, DispatchError> {
+		print("balances::withdraw");
 		if value.is_zero() {
 			return Ok(NegativeImbalance::zero())
 		}
-
+		print("balances::withdraw 11111111111");
 		Self::try_mutate_account(
 			who,
 			|account, _| -> Result<Self::NegativeImbalance, DispatchError> {
+				print("balances::withdraw 22222222222");
 				let new_free_account =
 					account.free.checked_sub(&value).ok_or(Error::<T, I>::InsufficientBalance)?;
-
+				print("balances::withdraw 3333333333333");
 				// bail if we need to keep the account alive and this would kill it.
 				let ed = T::ExistentialDeposit::get();
+				print("balances::withdraw 4444444444444");
 				let would_be_dead = new_free_account + account.reserved < ed;
 				let would_kill = would_be_dead && account.free + account.reserved >= ed;
+				print("balances::withdraw 55555555555555");
 				ensure!(liveness == AllowDeath || !would_kill, Error::<T, I>::KeepAlive);
+				print("balances::withdraw 6666666666666");
 
 				Self::ensure_can_withdraw(who, value, reasons, new_free_account)?;
+				print("balances::withdraw 7777777777777777");
 
 				account.free = new_free_account;
 
