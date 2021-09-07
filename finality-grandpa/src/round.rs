@@ -272,6 +272,7 @@ impl<Id, H, N, Signature> Round<Id, H, N, Signature> where
 		signer: Id,
 		signature: Signature,
 	) -> Result<ImportResult<Id, Prevote<H, N>, Signature>, crate::Error> {
+		print("import_prevote"):
 		let mut import_result = ImportResult::default();
 
 		let info = match self.context.voters().get(&signer) {
@@ -338,6 +339,7 @@ impl<Id, H, N, Signature> Round<Id, H, N, Signature> where
 			);
 		}
 
+		print("import_prevote self.update()");
 		self.update();
 
 		import_result.equivocation = equivocation;
@@ -355,6 +357,7 @@ impl<Id, H, N, Signature> Round<Id, H, N, Signature> where
 		signer: Id,
 		signature: Signature,
 	) -> Result<ImportResult<Id, Precommit<H, N>, Signature>, crate::Error> {
+		print("import_precommit");
 		let mut import_result = ImportResult::default();
 
 		let info = match self.context.voters().get(&signer) {
@@ -411,6 +414,7 @@ impl<Id, H, N, Signature> Round<Id, H, N, Signature> where
 			}
 		};
 
+		print("import_precommit self.update()");
 		self.update();
 		import_result.equivocation = equivocation;
 		Ok(import_result)
