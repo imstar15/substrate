@@ -28,6 +28,7 @@ use frame_support::traits::{FindAuthor, VerifySeal, Get};
 use codec::{Encode, Decode};
 use frame_system::ensure_none;
 use sp_runtime::traits::{Header as HeaderT, One, Zero};
+use sp_runtime::print;
 use frame_support::weights::{Weight, DispatchClass};
 use sp_inherents::{InherentIdentifier, ProvideInherent, InherentData};
 use sp_authorship::{INHERENT_IDENTIFIER, UnclesInherentData, InherentError};
@@ -593,12 +594,14 @@ mod tests {
 				Default::default()
 			);
 
+			print("authorship.initialize_block");
 			for number in 1..8 {
 				initialize_block(number, canon_chain.best_hash());
 				let header = seal_header(System::finalize(), author_a);
 				canon_chain.push(header);
 			}
 
+			print("authorship.initialize_block 22222");
 			// initialize so system context is set up correctly.
 			initialize_block(8, canon_chain.best_hash());
 

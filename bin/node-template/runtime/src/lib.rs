@@ -28,7 +28,7 @@ use sp_version::NativeVersion;
 pub use sp_runtime::BuildStorage;
 pub use pallet_timestamp::Call as TimestampCall;
 pub use pallet_balances::Call as BalancesCall;
-pub use sp_runtime::{Permill, Perbill};
+pub use sp_runtime::{Permill, Perbill, print};
 pub use frame_support::{
 	construct_runtime, parameter_types, StorageValue,
 	traits::{KeyOwnerProofSystem, Randomness},
@@ -338,6 +338,7 @@ impl_runtime_apis! {
 		}
 
 		fn initialize_block(header: &<Block as BlockT>::Header) {
+			print("node-template initialize_block");
 			Executive::initialize_block(header)
 		}
 	}

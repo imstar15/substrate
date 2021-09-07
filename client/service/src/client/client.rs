@@ -47,6 +47,7 @@ use sp_runtime::{
 		Block as BlockT, Header as HeaderT, Zero, NumberFor,
 		HashFor, SaturatedConversion, One, DigestFor, UniqueSaturatedInto,
 	},
+	print
 };
 use sp_state_machine::{
 	DBValue, Backend as StateBackend, ChangesTrieAnchorBlockId,
@@ -1666,6 +1667,7 @@ impl<B, E, Block, RA> CallApiAt<Block> for Client<B, E, Block, RA> where
 			params.context,
 		);
 
+		print("core_api.initialize_block");
 		self.executor.contextual_call::<_, fn(_,_) -> _,_,_>(
 			|| core_api
 				.initialize_block(at, &self.prepare_environment_block(at)?)
