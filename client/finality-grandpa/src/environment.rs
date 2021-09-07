@@ -853,7 +853,7 @@ where
 			precommit_timer: Box::pin(precommit_timer.map(Ok)),
 			incoming,
 			outgoing,
-		};
+		}
 	}
 
 	fn proposed(
