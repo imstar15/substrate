@@ -428,6 +428,7 @@ impl<B: BlockT, T: SimpleSlotWorker<B> + Send> SlotWorker<B, <T::Proposer as Pro
 		chain_head: B::Header,
 		slot_info: SlotInfo,
 	) -> Option<SlotResult<B, <T::Proposer as Proposer<B>>::Proof>> {
+		print("impl<B: BlockT, T: SimpleSlotWorker<B> + Send> SlotWorker<B, <T::Proposer as Proposer<B>>::Proof> for T on_slot");
 		SimpleSlotWorker::on_slot(self, chain_head, slot_info).await
 	}
 }
