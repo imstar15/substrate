@@ -751,18 +751,15 @@ where
 
 		// If interval is nonzero we backoff if the current slot isn't far enough ahead of the chain
 		// head.
-		// if *slot_now <= *chain_head_slot + interval {
-		// 	print("debug!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-		// 	// print("debug!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-		// 	info!(
-		// 		target: logging_target,
-		// 		"Backing off claiming new slot for block authorship: finality is lagging.",
-		// 	);
-		// 	true
-		// } else {
-		// 	false
-		// }
-		false
+		if *slot_now <= *chain_head_slot + interval {
+			info!(
+				target: logging_target,
+				"Backing off claiming new slot for block authorship: finality is lagging.",
+			);
+			true
+		} else {
+			false
+		}
 	}
 }
 

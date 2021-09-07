@@ -48,6 +48,7 @@ use sp_runtime::{
 	generic::DigestItem,
 	traits::Zero,
 	DispatchResult, KeyTypeId,
+	print,
 };
 use sp_session::{GetSessionNumber, GetValidatorCount};
 use sp_staking::SessionIndex;
@@ -256,6 +257,7 @@ decl_module! {
 			equivocation_proof: EquivocationProof<T::Hash, T::BlockNumber>,
 			key_owner_proof: T::KeyOwnerProof,
 		) -> DispatchResultWithPostInfo {
+			print('report_equivocation');
 			let reporter = ensure_signed(origin)?;
 
 			Self::do_report_equivocation(
@@ -280,6 +282,7 @@ decl_module! {
 			equivocation_proof: EquivocationProof<T::Hash, T::BlockNumber>,
 			key_owner_proof: T::KeyOwnerProof,
 		) -> DispatchResultWithPostInfo {
+			print('report_equivocation_unsigned');
 			ensure_none(origin)?;
 
 			Self::do_report_equivocation(
@@ -302,12 +305,14 @@ decl_module! {
 			delay: T::BlockNumber,
 			best_finalized_block_number: T::BlockNumber,
 		) {
+			print('note_stalled');
 			ensure_root(origin)?;
 
 			Self::on_stalled(delay, best_finalized_block_number)
 		}
 
 		fn on_finalize(block_number: T::BlockNumber) {
+			print('on_finalize');
 			// check for scheduled pending authority set changes
 			if let Some(pending_change) = <PendingChange<T>>::get() {
 				// emit signal if we're at the block that scheduled the change
@@ -375,11 +380,13 @@ decl_module! {
 impl<T: Config> Module<T> {
 	/// Get the current set of authorities, along with their respective weights.
 	pub fn grandpa_authorities() -> AuthorityList {
+		print("grandpa_authorities");
 		storage::unhashed::get_or_default::<VersionedAuthorityList>(GRANDPA_AUTHORITIES_KEY).into()
 	}
 
 	/// Set the current set of authorities, along with their respective weights.
 	fn set_grandpa_authorities(authorities: &AuthorityList) {
+		print("set_grandpa_authorities");
 		storage::unhashed::put(
 			GRANDPA_AUTHORITIES_KEY,
 			&VersionedAuthorityList::from(authorities),
@@ -389,6 +396,7 @@ impl<T: Config> Module<T> {
 	/// Schedule GRANDPA to pause starting in the given number of blocks.
 	/// Cannot be done when already paused.
 	pub fn schedule_pause(in_blocks: T::BlockNumber) -> DispatchResult {
+		print("schedule_pause");
 		if let StoredState::Live = <State<T>>::get() {
 			let scheduled_at = <frame_system::Pallet<T>>::block_number();
 			<State<T>>::put(StoredState::PendingPause {
@@ -404,6 +412,7 @@ impl<T: Config> Module<T> {
 
 	/// Schedule a resume of GRANDPA after pausing.
 	pub fn schedule_resume(in_blocks: T::BlockNumber) -> DispatchResult {
+		print("schedule_resume");
 		if let StoredState::Paused = <State<T>>::get() {
 			let scheduled_at = <frame_system::Pallet<T>>::block_number();
 			<State<T>>::put(StoredState::PendingResume {
@@ -436,6 +445,7 @@ impl<T: Config> Module<T> {
 		in_blocks: T::BlockNumber,
 		forced: Option<T::BlockNumber>,
 	) -> DispatchResult {
+		print("schedule_change");
 		if !<PendingChange<T>>::exists() {
 			let scheduled_at = <frame_system::Pallet<T>>::block_number();
 
@@ -464,6 +474,7 @@ impl<T: Config> Module<T> {
 
 	/// Deposit one of this module's logs.
 	fn deposit_log(log: ConsensusLog<T::BlockNumber>) {
+		print("deposit_log");
 		let log: DigestItem<T::Hash> = DigestItem::Consensus(GRANDPA_ENGINE_ID, log.encode());
 		<frame_system::Pallet<T>>::deposit_log(log.into());
 	}
@@ -471,6 +482,7 @@ impl<T: Config> Module<T> {
 	// Perform module initialization, abstracted so that it can be called either through genesis
 	// config builder or through `on_genesis_session`.
 	fn initialize(authorities: &AuthorityList) {
+		print("initialize");
 		if !authorities.is_empty() {
 			assert!(
 				Self::grandpa_authorities().is_empty(),
@@ -490,6 +502,7 @@ impl<T: Config> Module<T> {
 		equivocation_proof: EquivocationProof<T::Hash, T::BlockNumber>,
 		key_owner_proof: T::KeyOwnerProof,
 	) -> DispatchResultWithPostInfo {
+		print("do_report_equivocation");
 		// we check the equivocation within the context of its set id (and
 		// associated session) and round. we also need to know the validator
 		// set count when the offence since it is required to calculate the
@@ -560,6 +573,7 @@ impl<T: Config> Module<T> {
 		equivocation_proof: EquivocationProof<T::Hash, T::BlockNumber>,
 		key_owner_proof: T::KeyOwnerProof,
 	) -> Option<()> {
+		print("submit_unsigned_equivocation_report");
 		T::HandleEquivocation::submit_unsigned_equivocation_report(
 			equivocation_proof,
 			key_owner_proof,
@@ -571,6 +585,7 @@ impl<T: Config> Module<T> {
 		// when we record old authority sets we could try to figure out _who_
 		// failed. until then, we can't meaningfully guard against
 		// `next == last` the way that normal session changes do.
+		print("on_stalled");
 		<Stalled<T>>::put((further_wait, median));
 	}
 }
@@ -587,6 +602,7 @@ impl<T: Config> OneSessionHandler<T::AccountId> for Module<T>
 	fn on_genesis_session<'a, I: 'a>(validators: I)
 		where I: Iterator<Item=(&'a T::AccountId, AuthorityId)>
 	{
+		print("on_genesis_session");
 		let authorities = validators.map(|(_, k)| (k, 1)).collect::<Vec<_>>();
 		Self::initialize(&authorities);
 	}
@@ -597,6 +613,7 @@ impl<T: Config> OneSessionHandler<T::AccountId> for Module<T>
 		// Always issue a change if `session` says that the validators have changed.
 		// Even if their session keys are the same as before, the underlying economic
 		// identities have changed.
+		print("on_new_session");
 		let current_set_id = if changed || <Stalled<T>>::exists() {
 			let next_authorities = validators.map(|(_, k)| (k, 1)).collect::<Vec<_>>();
 
@@ -630,6 +647,7 @@ impl<T: Config> OneSessionHandler<T::AccountId> for Module<T>
 	}
 
 	fn on_disabled(i: usize) {
+		print("on_disabled");
 		Self::deposit_log(ConsensusLog::OnDisabled(i as u64))
 	}
 }
