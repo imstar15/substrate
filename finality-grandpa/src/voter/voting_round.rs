@@ -319,7 +319,7 @@ impl<H, N, E: Environment<H, N>> VotingRound<H, N, E> where
 	) -> Result<Option<(H, N)>, E::Error> {
 		println!("check_and_import_from_commit");
 		let bt = Backtrace::new();
-		println!("handle_vote self.votes.import_precommit");
+		println!("check_and_import_from_commit self.votes.import_precommit");
 		println!("{:?}", bt);
 		let base = validate_commit(commit, self.voters(), &*self.env)?.ghost;
 		if base.is_none() { return Ok(None) }
