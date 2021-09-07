@@ -23,6 +23,7 @@
 use std::cmp::Reverse;
 use std::fmt;
 use codec::{Decode, Encode};
+use sp_runtime::print;
 
 /// Error occurred when iterating with the tree.
 #[derive(Clone, Debug, PartialEq)]
