@@ -198,6 +198,7 @@ pub trait SimpleSlotWorker<B: BlockT> {
 		chain_head: B::Header,
 		slot_info: SlotInfo,
 	) -> Option<SlotResult<B, <Self::Proposer as Proposer<B>>::Proof>> {
+		print("on_slot");
 		let (timestamp, slot) = (slot_info.timestamp, slot_info.slot);
 		let telemetry = self.telemetry();
 		let logging_target = self.logging_target();
@@ -461,6 +462,7 @@ where
 	T: SlotData + Clone,
 	CAW: CanAuthorWith<B> + Send,
 {
+	print("start_slot_worker");
 	let SlotDuration(slot_duration) = slot_duration;
 
 	// rather than use a timer interval, we schedule our waits ourselves
@@ -567,6 +569,7 @@ impl<T: Clone + Send + Sync + 'static> SlotDuration<T> {
 		CB: FnOnce(ApiRef<C::Api>, &BlockId<B>) -> sp_blockchain::Result<T>,
 		T: SlotData + Encode + Decode + Debug,
 	{
+		print("get_or_compute");
 		let slot_duration = match client.get_aux(T::SLOT_KEY)? {
 			Some(v) => <T as codec::Decode>::decode(&mut &v[..])
 				.map(SlotDuration)
@@ -629,6 +632,7 @@ impl SlotProportion {
 /// an exponential backoff of at most `2^7 * slot_duration`, if no slots were skipped
 /// this method will return `None.`
 pub fn slot_lenience_exponential(parent_slot: Slot, slot_info: &SlotInfo) -> Option<Duration> {
+	print("slot_lenience_exponential");
 	// never give more than 2^this times the lenience.
 	const BACKOFF_CAP: u64 = 7;
 
@@ -658,6 +662,7 @@ pub fn slot_lenience_exponential(parent_slot: Slot, slot_info: &SlotInfo) -> Opt
 /// a linear backoff of at most `20 * slot_duration`, if no slots were skipped
 /// this method will return `None.`
 pub fn slot_lenience_linear(parent_slot: Slot, slot_info: &SlotInfo) -> Option<Duration> {
+	print("slot_lenience_linear");
 	// never give more than 20 times more lenience.
 	const BACKOFF_CAP: u64 = 20;
 
@@ -736,6 +741,7 @@ where
 		slot_now: Slot,
 		logging_target: &str,
 	) -> bool {
+		print("should_backoff");
 		// This should not happen, but we want to keep the previous behaviour if it does.
 		if slot_now <= chain_head_slot {
 			return false;
@@ -772,6 +778,7 @@ impl<N> BackoffAuthoringBlocksStrategy<N> for () {
 		_slot_now: Slot,
 		_logging_target: &str,
 	) -> bool {
+		print("should_backoff");
 		false
 	}
 }
