@@ -188,9 +188,9 @@ impl<H, N, E: Environment<H, N>> VotingRound<H, N, E> where
 		trace!(target: "afg", "Polling round {}, state = {:?}, step = {:?}", self.votes.number(), self.votes.state(), self.state);
 		
 		let pre_state = self.votes.state();
-		print("voting_round process_incoming 111111-START");
+		println!("voting_round process_incoming 111111-START");
 		self.process_incoming(cx)?;
-		print("voting_round process_incoming 1111111-END");
+		println!("voting_round process_incoming 1111111-END");
 
 		// we only cast votes when we have access to the previous round state.
 		// we might have started this round as a prospect "future" round to
@@ -203,9 +203,9 @@ impl<H, N, E: Environment<H, N>> VotingRound<H, N, E> where
 		}
 
 		ready!(self.outgoing.poll(cx))?;
-		print("voting_round process_incoming 222222-START");
+		println!("voting_round process_incoming 222222-START");
 		self.process_incoming(cx)?; // in case we got a new message signed locally.
-		print("voting_round process_incoming 222222-END");
+		println!("voting_round process_incoming 222222-END");
 
 		// broadcast finality notifications after attempting to cast votes
 		let post_state = self.votes.state();
