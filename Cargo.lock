@@ -1658,7 +1658,7 @@ dependencies = [
 [[package]]
 name = "finality-grandpa"
 version = "0.14.0"
-source = "git+https://github.com/imstar15/finality-grandpa?branch=v0.14.0#40b78f2126e7cbc3da878feb5182425bd5b2c3a9"
+source = "git+https://github.com/imstar15/finality-grandpa?branch=v0.14.0#034f11341813d7282e008c8a8673c58a9a5bff26"
 dependencies = [
  "either",
  "futures 0.3.13",
