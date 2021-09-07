@@ -393,6 +393,7 @@ impl<H, N, V> ForkTree<H, N, V> where
 		where E: std::error::Error,
 			  F: Fn(&H, &H) -> Result<bool, E>
 	{
+		print("fork-tree finalize");
 		if let Some(ref best_finalized_number) = self.best_finalized_number {
 			if number <= *best_finalized_number {
 				return Err(Error::Revert);
