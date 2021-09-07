@@ -1668,7 +1668,7 @@ impl<B, E, Block, RA> CallApiAt<Block> for Client<B, E, Block, RA> where
 		);
 
 		print("core_api.initialize_block");
-		self.executor.contextual_call::<_, fn(_,_) -> _,_,_>(
+		let result = self.executor.contextual_call::<_, fn(_,_) -> _,_,_>(
 			|| core_api
 				.initialize_block(at, &self.prepare_environment_block(at)?)
 				.map_err(Error::RuntimeApiError),
@@ -1682,7 +1682,11 @@ impl<B, E, Block, RA> CallApiAt<Block> for Client<B, E, Block, RA> where
 			params.native_call,
 			params.recorder,
 			Some(extensions),
-		).map_err(Into::into)
+		).map_err(Into::into);
+
+		print("core_api.initialize_block 22222222222");
+
+		result
 	}
 
 	fn runtime_version_at(
