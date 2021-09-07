@@ -179,6 +179,7 @@ where
 	UnsignedValidator: ValidateUnsigned<Call=CallOf<Block::Extrinsic, Context>>,
 {
 	fn execute_block(block: Block) {
+		print("execute_block");
 		Executive::<System, Block, Context, UnsignedValidator, AllPallets>::execute_block(block);
 	}
 }
