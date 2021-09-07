@@ -186,9 +186,11 @@ impl<H, N, E: Environment<H, N>> VotingRound<H, N, E> where
 	/// can continue to be polled.
 	pub(super) fn poll(&mut self, cx: &mut Context) -> Poll<Result<(), E::Error>> {
 		trace!(target: "afg", "Polling round {}, state = {:?}, step = {:?}", self.votes.number(), self.votes.state(), self.state);
-
+		
 		let pre_state = self.votes.state();
+		print("voting_round process_incoming 111111-START");
 		self.process_incoming(cx)?;
+		print("voting_round process_incoming 1111111-END");
 
 		// we only cast votes when we have access to the previous round state.
 		// we might have started this round as a prospect "future" round to
@@ -201,7 +203,9 @@ impl<H, N, E: Environment<H, N>> VotingRound<H, N, E> where
 		}
 
 		ready!(self.outgoing.poll(cx))?;
+		print("voting_round process_incoming 222222-START");
 		self.process_incoming(cx)?; // in case we got a new message signed locally.
+		print("voting_round process_incoming 222222-END");
 
 		// broadcast finality notifications after attempting to cast votes
 		let post_state = self.votes.state();
@@ -317,10 +321,10 @@ impl<H, N, E: Environment<H, N>> VotingRound<H, N, E> where
 		&mut self,
 		commit: &Commit<H, N, E::Signature, E::Id>
 	) -> Result<Option<(H, N)>, E::Error> {
-		println!("check_and_import_from_commit");
-		let bt = Backtrace::new();
+		// println!("check_and_import_from_commit");
+		// let bt = Backtrace::new();
 		println!("check_and_import_from_commit self.votes.import_precommit");
-		println!("{:?}", bt);
+		// println!("{:?}", bt);
 		let base = validate_commit(commit, self.voters(), &*self.env)?.ghost;
 		if base.is_none() { return Ok(None) }
 
@@ -385,9 +389,9 @@ impl<H, N, E: Environment<H, N>> VotingRound<H, N, E> where
 				}
 			}
 			Message::Precommit(precommit) => {
-				let bt = Backtrace::new();
+				// let bt = Backtrace::new();
 				println!("handle_vote self.votes.import_precommit");
-				println!("{:?}", bt);
+				// println!("{:?}", bt);
 				let import_result = self.votes.import_precommit(&*self.env, precommit, id, signature)?;
 				if let ImportResult { equivocation: Some(e), .. } = import_result {
 					self.env.precommit_equivocation(self.votes.number(), e);
@@ -425,7 +429,9 @@ impl<H, N, E: Environment<H, N>> VotingRound<H, N, E> where
 	fn process_incoming(&mut self, cx: &mut Context) -> Result<(), E::Error> {
 		while let Poll::Ready(Some(incoming)) = Stream::poll_next(Pin::new(&mut self.incoming), cx) {
 			trace!(target: "afg", "Round {}: Got incoming message", self.round_number());
+			println!("voting_round handle_vote START");
 			self.handle_vote(incoming?)?;
+			println!("voting_round handle_vote END");
 		}
 
 		Ok(())

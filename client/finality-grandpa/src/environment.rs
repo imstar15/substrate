@@ -782,8 +782,8 @@ where
 		round: RoundNumber,
 	) -> voter::RoundData<Self::Id, Self::Timer, Self::In, Self::Out> {
 		print("round_data");
-		let bt = Backtrace::new();
-		println!("{:?}", bt);
+		// let bt = Backtrace::new();
+		// println!("{:?}", bt);
 		let prevote_timer = Delay::new(self.config.gossip_duration * 2);
 		let precommit_timer = Delay::new(self.config.gossip_duration * 4);
 
@@ -1161,8 +1161,8 @@ where
 		commit: Commit<Block>,
 	) -> Result<(), Self::Error> {
 		print("env client.finalize_block");
-		let bt = Backtrace::new();
-		println!("{:?}", bt);
+		// let bt = Backtrace::new();
+		// println!("{:?}", bt);
 		finalize_block(
 			self.client.clone(),
 			&self.authority_set,

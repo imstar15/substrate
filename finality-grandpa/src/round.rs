@@ -414,7 +414,7 @@ impl<Id, H, N, Signature> Round<Id, H, N, Signature> where
 			}
 		};
 
-		print("import_precommit self.update()");
+		// print("import_precommit self.update()");
 		self.update();
 		import_result.equivocation = equivocation;
 		Ok(import_result)
