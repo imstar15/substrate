@@ -44,7 +44,8 @@ use sp_consensus_slots::Slot;
 use sp_inherents::{InherentData, InherentDataProviders};
 use sp_runtime::{
 	generic::BlockId,
-	traits::{Block as BlockT, Header, HashFor, NumberFor}
+	traits::{Block as BlockT, Header, HashFor, NumberFor},
+	print,
 };
 use sc_telemetry::{telemetry, TelemetryHandle, CONSENSUS_DEBUG, CONSENSUS_WARN, CONSENSUS_INFO};
 
@@ -751,6 +752,7 @@ where
 		// If interval is nonzero we backoff if the current slot isn't far enough ahead of the chain
 		// head.
 		if *slot_now <= *chain_head_slot + interval {
+			print("debug!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
 			info!(
 				target: logging_target,
 				"Backing off claiming new slot for block authorship: finality is lagging.",
