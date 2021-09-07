@@ -260,6 +260,7 @@ pub trait SimpleSlotWorker<B: BlockT> {
 
 		let claim = self.claim_slot(&chain_head, slot, &epoch_data)?;
 
+		print("check self.should_backoff");
 		if self.should_backoff(slot, &chain_head) {
 			return None;
 		}
