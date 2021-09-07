@@ -315,7 +315,7 @@ impl<H, N, E: Environment<H, N>> VotingRound<H, N, E> where
 		&mut self,
 		commit: &Commit<H, N, E::Signature, E::Id>
 	) -> Result<Option<(H, N)>, E::Error> {
-		print("check_and_import_from_commit");
+		println!("check_and_import_from_commit");
 		let base = validate_commit(commit, self.voters(), &*self.env)?.ghost;
 		if base.is_none() { return Ok(None) }
 
@@ -362,7 +362,7 @@ impl<H, N, E: Environment<H, N>> VotingRound<H, N, E> where
 
 	/// Handle a vote manually.
 	pub(super) fn handle_vote(&mut self, vote: SignedMessage<H, N, E::Signature, E::Id>) -> Result<(), E::Error> {
-		print("handle_vote");
+		println!("handle_vote");
 		let SignedMessage { message, signature, id } = vote;
 		if !self.env.is_equal_or_descendent_of(self.votes.base().0, message.target().0.clone()) {
 			trace!(target: "afg", "Ignoring message targeting {:?} lower than round base {:?}",
