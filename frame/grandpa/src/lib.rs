@@ -257,7 +257,7 @@ decl_module! {
 			equivocation_proof: EquivocationProof<T::Hash, T::BlockNumber>,
 			key_owner_proof: T::KeyOwnerProof,
 		) -> DispatchResultWithPostInfo {
-			print('report_equivocation');
+			print("report_equivocation");
 			let reporter = ensure_signed(origin)?;
 
 			Self::do_report_equivocation(
