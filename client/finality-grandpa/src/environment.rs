@@ -845,13 +845,15 @@ where
 		// schedule network message cleanup when sink drops.
 		let outgoing = Box::pin(outgoing.sink_err_into());
 
+		print("round_data 666666666");
+
 		voter::RoundData {
 			voter_id: local_id,
 			prevote_timer: Box::pin(prevote_timer.map(Ok)),
 			precommit_timer: Box::pin(precommit_timer.map(Ok)),
 			incoming,
 			outgoing,
-		}
+		};
 	}
 
 	fn proposed(
