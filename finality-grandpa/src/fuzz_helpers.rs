@@ -268,6 +268,7 @@ fn rand_block(s: &mut RandomnessStream) -> Option<Block> {
 
 /// Execute a fuzzed voting process on a `Round`.
 pub fn execute_fuzzed_vote(data: &[u8]) {
+	print("execute_fuzzed_vote");
 	assert!(voters().len() <= core::u8::MAX as usize);
 
 	let n = voters().len() as u8;
