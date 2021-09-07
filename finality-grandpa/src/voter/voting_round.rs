@@ -35,6 +35,8 @@ use crate::{
 	PrimaryPropose, SignedMessage, SignedPrecommit,
 };
 
+use backtrace::Backtrace;
+
 /// The state of a voting round.
 pub(super) enum State<T, W> {
 	Start(T, T),
@@ -316,6 +318,9 @@ impl<H, N, E: Environment<H, N>> VotingRound<H, N, E> where
 		commit: &Commit<H, N, E::Signature, E::Id>
 	) -> Result<Option<(H, N)>, E::Error> {
 		println!("check_and_import_from_commit");
+		let bt = Backtrace::new();
+		println!("handle_vote self.votes.import_precommit");
+		println!("{:?}", bt);
 		let base = validate_commit(commit, self.voters(), &*self.env)?.ghost;
 		if base.is_none() { return Ok(None) }
 
@@ -380,6 +385,9 @@ impl<H, N, E: Environment<H, N>> VotingRound<H, N, E> where
 				}
 			}
 			Message::Precommit(precommit) => {
+				let bt = Backtrace::new();
+				println!("handle_vote self.votes.import_precommit");
+				println!("{:?}", bt);
 				let import_result = self.votes.import_precommit(&*self.env, precommit, id, signature)?;
 				if let ImportResult { equivocation: Some(e), .. } = import_result {
 					self.env.precommit_equivocation(self.votes.number(), e);

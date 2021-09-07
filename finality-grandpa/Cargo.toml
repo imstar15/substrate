@@ -17,6 +17,7 @@ parity-scale-codec = { version = "2.0", default-features = false, features = ["d
 parking_lot = { version = "0.11", optional = true }
 rand = { version = "0.8", optional = true }
 sp-runtime = { path = '../primitives/runtime', default-features = false }
+backtrace = "0.3.61"
 
 [dev-dependencies]
 quickcheck = "1.0"
