@@ -205,11 +205,11 @@ impl<H, N, E: Environment<H, N>> VotingRound<H, N, E> where
 		let post_state = self.votes.state();
 		self.notify(pre_state, post_state);
 
+		println!("self.votes.completable(): {:?}", self.votes.completable());
 		// early exit if the current round is not completable
 		if !self.votes.completable() {
 			return Poll::Pending;
 		}
-		println!("self.votes.completable(): {:?}", self.votes.completable());
 
 		// make sure that the previous round estimate has been finalized
 		let last_round_estimate_finalized = match last_round_state {
