@@ -305,14 +305,14 @@ decl_module! {
 			delay: T::BlockNumber,
 			best_finalized_block_number: T::BlockNumber,
 		) {
-			print('note_stalled');
+			print("note_stalled");
 			ensure_root(origin)?;
 
 			Self::on_stalled(delay, best_finalized_block_number)
 		}
 
 		fn on_finalize(block_number: T::BlockNumber) {
-			print('on_finalize');
+			print("on_finalize");
 			// check for scheduled pending authority set changes
 			if let Some(pending_change) = <PendingChange<T>>::get() {
 				// emit signal if we're at the block that scheduled the change
