@@ -272,7 +272,7 @@ impl<Id, H, N, Signature> Round<Id, H, N, Signature> where
 		signer: Id,
 		signature: Signature,
 	) -> Result<ImportResult<Id, Prevote<H, N>, Signature>, crate::Error> {
-		print("import_prevote"):
+		print("import_prevote");
 		let mut import_result = ImportResult::default();
 
 		let info = match self.context.voters().get(&signer) {
