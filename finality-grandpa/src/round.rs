@@ -272,7 +272,7 @@ impl<Id, H, N, Signature> Round<Id, H, N, Signature> where
 		signer: Id,
 		signature: Signature,
 	) -> Result<ImportResult<Id, Prevote<H, N>, Signature>, crate::Error> {
-		print("import_prevote");
+		// print("import_prevote");
 		let mut import_result = ImportResult::default();
 
 		let info = match self.context.voters().get(&signer) {
@@ -339,7 +339,7 @@ impl<Id, H, N, Signature> Round<Id, H, N, Signature> where
 			);
 		}
 
-		print("import_prevote self.update()");
+		// print("import_prevote self.update()");
 		self.update();
 
 		import_result.equivocation = equivocation;
@@ -357,7 +357,7 @@ impl<Id, H, N, Signature> Round<Id, H, N, Signature> where
 		signer: Id,
 		signature: Signature,
 	) -> Result<ImportResult<Id, Precommit<H, N>, Signature>, crate::Error> {
-		print("import_precommit");
+		// print("import_precommit");
 		let mut import_result = ImportResult::default();
 
 		let info = match self.context.voters().get(&signer) {
@@ -509,21 +509,27 @@ impl<Id, H, N, Signature> Round<Id, H, N, Signature> where
 
 	// update the round-estimate and whether the round is completable.
 	fn update(&mut self) {
-		print("self.update");
+		print("round::update");
 		let threshold = self.threshold();
-		
-		print("self.update 11111111");
+
+		print("self.prevote.current_weight");
+		print(self.prevote.current_weight.0 as u64);
+		print("threshold");
+		print(u64::from(threshold.0));
+
+		// print("self.update 11111111");
 		if self.prevote.current_weight < threshold {
-			print("self.update 22222222");
+			// print("self.update 22222222");
+			
 			return
 		}
-		print("self.update 33333333");
+		// print("self.update 33333333");
 
 		let (g_hash, g_num) = match self.prevote_ghost.clone() {
 			None => return,
 			Some(x) => x,
 		};
-		print("self.update 4444444");
+		// print("self.update 4444444");
 
 		let ctx = &self.context;
 
@@ -531,14 +537,14 @@ impl<Id, H, N, Signature> Round<Id, H, N, Signature> where
 		// 2/3+ prevote and precommit weight.
 		let current_precommits = self.precommit.current_weight;
 		if current_precommits >= self.threshold() {
-			print("self.update 555555555");
+			// print("self.update 555555555");
 			self.finalized = self.graph.find_ancestor(
 				g_hash.clone(),
 				g_num,
 				|v| ctx.weight(v, Phase::Precommit) >= threshold,
 			);
 		};
-		print("self.update 66666666");
+		// print("self.update 66666666");
 
 		// figuring out whether a block can still be committed for is
 		// not straightforward because we have to account for all possible future
@@ -576,7 +582,7 @@ impl<Id, H, N, Signature> Round<Id, H, N, Signature> where
 				full_possible_weight >= threshold
 			}
 		};
-		print("self.update 7777777777");
+		// print("self.update 7777777777");
 
 		// until we have threshold precommits, any new block could get supermajority
 		// precommits because there are at least f + 1 precommits remaining and then
@@ -589,18 +595,18 @@ impl<Id, H, N, Signature> Round<Id, H, N, Signature> where
 		// the round-estimate is the highest block in the chain with head
 		// `prevote_ghost` that could have supermajority-commits.
 		if self.precommit.current_weight >= threshold {
-			print("self.update 88888888");
+			// print("self.update 88888888");
 			self.estimate = self.graph.find_ancestor(
 				g_hash.clone(),
 				g_num,
 				possible_to_precommit,
 			);
 		} else {
-			print("self.update 9999999");
+			// print("self.update 9999999");
 			self.estimate = Some((g_hash, g_num));
 			return;
 		}
-		print("self.update aaaaaaaaa");
+		// print("self.update aaaaaaaaa");
 
 		self.completable = self.estimate.clone().map_or(false, |(b_hash, b_num)| {
 			b_hash != g_hash || {

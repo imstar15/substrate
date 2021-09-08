@@ -1180,9 +1180,9 @@ impl<B, E, Block, RA> Client<B, E, Block, RA> where
 
 	/// Prepare in-memory header that is used in execution environment.
 	fn prepare_environment_block(&self, parent: &BlockId<Block>) -> sp_blockchain::Result<Block::Header> {
-		print("prepare_environment_block 11111111");
+		// print("prepare_environment_block 11111111");
 		let parent_hash = self.backend.blockchain().expect_block_hash_from_id(parent)?;
-		print("prepare_environment_block 22222222");
+		// print("prepare_environment_block 22222222");
 		Ok(<<Block as BlockT>::Header as HeaderT>::new(
 			self.backend.blockchain().expect_block_number_from_id(parent)? + One::one(),
 			Default::default(),
@@ -1669,7 +1669,7 @@ impl<B, E, Block, RA> CallApiAt<Block> for Client<B, E, Block, RA> where
 			params.context,
 		);
 
-		print("core_api.initialize_block");
+		// print("core_api.initialize_block");
 		let result = self.executor.contextual_call::<_, fn(_,_) -> _,_,_>(
 			|| core_api
 				.initialize_block(at, &self.prepare_environment_block(at)?)
@@ -1686,7 +1686,7 @@ impl<B, E, Block, RA> CallApiAt<Block> for Client<B, E, Block, RA> where
 			Some(extensions),
 		).map_err(Into::into);
 
-		print("core_api.initialize_block 22222222222");
+		// print("core_api.initialize_block 22222222222");
 
 		result
 	}

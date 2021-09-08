@@ -539,7 +539,7 @@ pub(crate) fn write_concluded_round<Block: BlockT, B: AuxStore>(
 	backend: &B,
 	round_data: &CompletedRound<Block>,
 ) -> ClientResult<()> {
-	print("write_concluded_round");
+	// print("write_concluded_round");
 	let mut key = CONCLUDED_ROUNDS.to_vec();
 	let round_number = round_data.number;
 	round_number.using_encoded(|n| key.extend(n));

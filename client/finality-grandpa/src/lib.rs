@@ -480,7 +480,7 @@ impl<Block: BlockT, E> GenesisAuthoritySetProvider<Block> for Arc<dyn ExecutorPr
 	where E: CallExecutor<Block>,
 {
 	fn get(&self) -> Result<AuthorityList, ClientError> {
-		print("get");
+		// print("get");
 		// This implementation uses the Grandpa runtime API instead of reading directly from the
 		// `GRANDPA_AUTHORITIES_KEY` as the data may have been migrated since the genesis block of
 		// the chain, whereas the runtime API is backwards compatible.
@@ -520,7 +520,7 @@ where
 	BE: Backend<Block> + 'static,
 	Client: ClientForGrandpa<Block, BE> + 'static,
 {
-	print("block_import");
+	// print("block_import");
 	block_import_with_authority_set_hard_forks(
 		client,
 		genesis_authorities_provider,
@@ -553,7 +553,7 @@ where
 	BE: Backend<Block> + 'static,
 	Client: ClientForGrandpa<Block, BE> + 'static,
 {
-	print("block_import_with_authority_set_hard_forks");
+	// print("block_import_with_authority_set_hard_forks");
 	let chain_info = client.info();
 	let genesis_hash = chain_info.genesis_hash;
 
@@ -642,7 +642,7 @@ fn global_communication<BE, Block: BlockT, C, N>(
 	N: NetworkT<Block>,
 	NumberFor<Block>: BlockNumberOps,
 {
-	print("global_communication");
+	// print("global_communication");
 	let is_voter = local_authority_id(voters, keystore).is_some();
 
 	// verification stream
@@ -693,7 +693,7 @@ pub struct GrandpaParams<Block: BlockT, C, N, SC, VR> {
 /// Returns the configuration value to put in
 /// [`sc_network::config::NetworkConfiguration::extra_sets`].
 pub fn grandpa_peers_set_config() -> sc_network::config::NonDefaultSetConfig {
-	print("grandpa_peers_set_config");
+	// print("grandpa_peers_set_config");
 	sc_network::config::NonDefaultSetConfig {
 		notifications_protocol: communication::GRANDPA_PROTOCOL_NAME.into(),
 		// Notifications reach ~256kiB in size at the time of writing on Kusama and Polkadot.
@@ -723,7 +723,7 @@ where
 	C: ClientForGrandpa<Block, BE> + 'static,
 	C::Api: GrandpaApi<Block>,
 {
-	print("run_grandpa_voter");
+	// print("run_grandpa_voter");
 	let GrandpaParams {
 		mut config,
 		link,
@@ -877,7 +877,7 @@ where
 		justification_sender: GrandpaJustificationSender<Block>,
 		telemetry: Option<TelemetryHandle>,
 	) -> Self {
-		print("new");
+		// print("new");
 		let metrics = match prometheus_registry.as_ref().map(Metrics::register) {
 			Some(Ok(metrics)) => Some(metrics),
 			Some(Err(e)) => {
@@ -923,7 +923,7 @@ where
 	/// state. This method should be called when we know that the authority set
 	/// has changed (e.g. as signalled by a voter command).
 	fn rebuild_voter(&mut self) {
-		print("rebuild_voter");
+		// print("rebuild_voter");
 		debug!(target: "afg", "{}: Starting new voter with set ID {}", self.env.config.name(), self.env.set_id);
 
 		let authority_id = local_authority_id(&self.env.voters, self.env.config.keystore.as_ref())
@@ -1009,7 +1009,7 @@ where
 		&mut self,
 		command: VoterCommand<Block::Hash, NumberFor<Block>>
 	) -> Result<(), Error> {
-		print("handle_voter_command");
+		// print("handle_voter_command");
 		match command {
 			VoterCommand::ChangeAuthorities(new) => {
 				let voters: Vec<String> = new.authorities.iter().map(move |(a, _)| {
@@ -1152,7 +1152,7 @@ fn local_authority_id(
 	voters: &VoterSet<AuthorityId>,
 	keystore: Option<&SyncCryptoStorePtr>,
 ) -> Option<AuthorityId> {
-	print("local_authority_id");
+	// print("local_authority_id");
 	keystore.and_then(|keystore| { 
 		voters
 		.iter()

@@ -188,9 +188,9 @@ impl<H, N, E: Environment<H, N>> VotingRound<H, N, E> where
 		trace!(target: "afg", "Polling round {}, state = {:?}, step = {:?}", self.votes.number(), self.votes.state(), self.state);
 		
 		let pre_state = self.votes.state();
-		println!("voting_round process_incoming 111111-START");
+		// println!("voting_round process_incoming 111111-START");
 		self.process_incoming(cx)?;
-		println!("voting_round process_incoming 1111111-END");
+		// println!("voting_round process_incoming 1111111-END");
 
 		// we only cast votes when we have access to the previous round state.
 		// we might have started this round as a prospect "future" round to
@@ -203,19 +203,19 @@ impl<H, N, E: Environment<H, N>> VotingRound<H, N, E> where
 		}
 
 		ready!(self.outgoing.poll(cx))?;
-		println!("voting_round process_incoming 222222-START");
+		// println!("voting_round process_incoming 222222-START");
 		self.process_incoming(cx)?; // in case we got a new message signed locally.
-		println!("voting_round process_incoming 222222-END");
+		// println!("voting_round process_incoming 222222-END");
 
 		// broadcast finality notifications after attempting to cast votes
 		let post_state = self.votes.state();
 		self.notify(pre_state, post_state);
 
-		println!("self.votes.completable(): {:?}", self.votes.completable());
 		// early exit if the current round is not completable
 		if !self.votes.completable() {
 			return Poll::Pending;
 		}
+		println!("self.votes.completable(): {:?}", self.votes.completable());
 
 		// make sure that the previous round estimate has been finalized
 		let last_round_estimate_finalized = match last_round_state {
@@ -383,6 +383,7 @@ impl<H, N, E: Environment<H, N>> VotingRound<H, N, E> where
 
 		match message {
 			Message::Prevote(prevote) => {
+				println!("handle_vote self.votes.import_prevote");
 				let import_result = self.votes.import_prevote(&*self.env, prevote, id, signature)?;
 				if let ImportResult { equivocation: Some(e), .. } = import_result {
 					self.env.prevote_equivocation(self.votes.number(), e);
@@ -398,6 +399,7 @@ impl<H, N, E: Environment<H, N>> VotingRound<H, N, E> where
 				}
 			}
 			Message::PrimaryPropose(primary) => {
+				println!("self.votes.primary_voter().0.clone()");
 				let primary_id = self.votes.primary_voter().0.clone();
 				// note that id here refers to the party which has cast the vote
 				// and not the id of the party which has received the vote message.
@@ -429,9 +431,9 @@ impl<H, N, E: Environment<H, N>> VotingRound<H, N, E> where
 	fn process_incoming(&mut self, cx: &mut Context) -> Result<(), E::Error> {
 		while let Poll::Ready(Some(incoming)) = Stream::poll_next(Pin::new(&mut self.incoming), cx) {
 			trace!(target: "afg", "Round {}: Got incoming message", self.round_number());
-			println!("voting_round handle_vote START");
+			// println!("voting_round handle_vote START");
 			self.handle_vote(incoming?)?;
-			println!("voting_round handle_vote END");
+			// println!("voting_round handle_vote END");
 		}
 
 		Ok(())
@@ -484,7 +486,7 @@ impl<H, N, E: Environment<H, N>> VotingRound<H, N, E> where
 		cx: &mut Context,
 		last_round_state: &RoundState<H, N>,
 	) -> Result<(), E::Error> {
-		print("provote");
+		// println!("prevote");
 		let state = self.state.take();
 
 		let start_prevoting = |

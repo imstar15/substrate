@@ -254,7 +254,7 @@ where
 	}
 
 	fn extract_pre_digest(header: &System::Header) -> DigestOf<System> {
-		print("extract_pre_digest");
+		// print("extract_pre_digest");
 		let mut digest = <DigestOf<System>>::default();
 		header.digest().logs()
 			.iter()
@@ -269,7 +269,7 @@ where
 		parent_hash: &System::Hash,
 		digest: &Digest<System::Hash>,
 	) {
-		print("initialize_block_impl");
+		// print("initialize_block_impl");
 		let mut weight = 0;
 		if Self::runtime_upgraded() {
 			weight = weight.saturating_add(Self::execute_on_runtime_upgrade());
@@ -296,7 +296,7 @@ where
 
 	/// Returns if the runtime was upgraded since the last time this function was called.
 	fn runtime_upgraded() -> bool {
-		print("runtime_upgraded");
+		// print("runtime_upgraded");
 		let last = frame_system::LastRuntimeUpgrade::<System>::get();
 		let current = <System::Version as frame_support::traits::Get<_>>::get();
 
@@ -576,72 +576,72 @@ mod tests {
 			pub struct Module<T: Config> for enum Call where origin: T::Origin {
 				#[weight = 100]
 				fn some_function(origin) {
-					print("some_function");
+					// print("some_function");
 					// NOTE: does not make any different.
 					frame_system::ensure_signed(origin)?;
 				}
 				#[weight = (200, DispatchClass::Operational)]
 				fn some_root_operation(origin) {
-					print("some_root_operation");
+					// print("some_root_operation");
 					frame_system::ensure_root(origin)?;
 				}
 				#[weight = 0]
 				fn some_unsigned_message(origin) {
-					print("some_unsigned_message");
+					// print("some_unsigned_message");
 					frame_system::ensure_none(origin)?;
 				}
 
 				#[weight = 0]
 				fn allowed_unsigned(origin) {
-					print("allowed_unsigned");
+					// print("allowed_unsigned");
 					frame_system::ensure_root(origin)?;
 				}
 
 				#[weight = 0]
 				fn unallowed_unsigned(origin) {
-					print("unallowed_unsigned");
+					// print("unallowed_unsigned");
 					frame_system::ensure_root(origin)?;
 				}
 
 				#[weight = 0]
 				fn inherent_call(origin) {
-					print("inherent_call");
+					// print("inherent_call");
 					let _ = frame_system::ensure_none(origin)?;
 				}
 
 				// module hooks.
 				// one with block number arg and one without
 				fn on_initialize(n: T::BlockNumber) -> Weight {
-					print("on_initialize");
+					// print("on_initialize");
 					println!("on_initialize({})", n);
 					175
 				}
 
 				fn on_idle(n: T::BlockNumber, remaining_weight: Weight) -> Weight {
-					print("on_idle");
+					// print("on_idle");
 					println!("on_idle{}, {})", n, remaining_weight);
 					175
 				}
 
 				fn on_finalize() {
-					print("on_finalize");
+					// print("on_finalize");
 					println!("on_finalize(?)");
 				}
 
 				fn on_runtime_upgrade() -> Weight {
-					print("on_runtime_upgrade");
+					// print("on_runtime_upgrade");
 					sp_io::storage::set(super::TEST_KEY, "module".as_bytes());
 					200
 				}
 
 				fn offchain_worker(n: T::BlockNumber) {
-					print("offchain_worker");
+					// print("offchain_worker");
 					assert_eq!(T::BlockNumber::from(1u32), n);
 				}
 
 				#[weight = 0]
 				fn calculate_storage_root(_origin) {
-					print("calculate_storage_root");
+					// print("calculate_storage_root");
 					let root = sp_io::storage::root();
 					sp_io::storage::set("storage_root".as_bytes(), &root);
 				}
@@ -653,11 +653,11 @@ mod tests {
 			type Error = sp_inherents::MakeFatalError<()>;
 			const INHERENT_IDENTIFIER: [u8; 8] = *b"test1234";
 			fn create_inherent(_data: &sp_inherents::InherentData) -> Option<Self::Call> {
-				print("create_inherent");
+				// print("create_inherent");
 				None
 			}
 			fn is_inherent(call: &Self::Call) -> bool {
-				print("is_inherent");
+				// print("is_inherent");
 				*call == Call::<T>::inherent_call()
 			}
 		}
@@ -670,7 +670,7 @@ mod tests {
 				_source: TransactionSource,
 				call: &Self::Call,
 			) -> TransactionValidity {
-				print("validate_unsigned");
+				// print("validate_unsigned");
 				match call {
 					Call::allowed_unsigned(..) => Ok(Default::default()),
 					_ => UnknownTransaction::NoUnsignedValidator.into(),
@@ -682,7 +682,7 @@ mod tests {
 			fn pre_dispatch(
 				call: &Self::Call,
 			) -> Result<(), TransactionValidityError> {
-				print("pre_dispatch");
+				// print("pre_dispatch");
 				match call {
 					Call::allowed_unsigned(..) => Ok(()),
 					Call::inherent_call(..) => Ok(()),

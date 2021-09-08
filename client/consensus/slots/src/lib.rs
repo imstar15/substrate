@@ -260,7 +260,7 @@ pub trait SimpleSlotWorker<B: BlockT> {
 
 		let claim = self.claim_slot(&chain_head, slot, &epoch_data)?;
 
-		print("check self.should_backoff");
+		// print("check self.should_backoff");
 		if self.should_backoff(slot, &chain_head) {
 			return None;
 		}
@@ -428,7 +428,7 @@ impl<B: BlockT, T: SimpleSlotWorker<B> + Send> SlotWorker<B, <T::Proposer as Pro
 		chain_head: B::Header,
 		slot_info: SlotInfo,
 	) -> Option<SlotResult<B, <T::Proposer as Proposer<B>>::Proof>> {
-		print("impl<B: BlockT, T: SimpleSlotWorker<B> + Send> SlotWorker<B, <T::Proposer as Proposer<B>>::Proof> for T on_slot");
+		// print("impl<B: BlockT, T: SimpleSlotWorker<B> + Send> SlotWorker<B, <T::Proposer as Proposer<B>>::Proof> for T on_slot");
 		SimpleSlotWorker::on_slot(self, chain_head, slot_info).await
 	}
 }
@@ -636,7 +636,7 @@ impl SlotProportion {
 /// an exponential backoff of at most `2^7 * slot_duration`, if no slots were skipped
 /// this method will return `None.`
 pub fn slot_lenience_exponential(parent_slot: Slot, slot_info: &SlotInfo) -> Option<Duration> {
-	print("slot_lenience_exponential");
+	// print("slot_lenience_exponential");
 	// never give more than 2^this times the lenience.
 	const BACKOFF_CAP: u64 = 7;
 

@@ -1103,7 +1103,7 @@ where
 		_base: (Block::Hash, NumberFor<Block>),
 		historical_votes: &HistoricalVotes<Block>,
 	) -> Result<(), Self::Error> {
-		print("env concluded");
+		// print("env concluded");
 		debug!(
 			target: "afg", "Voter {} concluded round {} in set {}. Estimate = {:?}, Finalized in round = {:?}",
 			self.config.name(),
@@ -1160,7 +1160,7 @@ where
 		round: RoundNumber,
 		commit: Commit<Block>,
 	) -> Result<(), Self::Error> {
-		print("env client.finalize_block");
+		// print("env client.finalize_block");
 		// let bt = Backtrace::new();
 		// println!("{:?}", bt);
 		finalize_block(
@@ -1244,7 +1244,7 @@ where
 	BE: Backend<Block>,
 	Client: crate::ClientForGrandpa<Block, BE>,
 {
-	print("pub(crate) fn finalize_block<BE, Block, Client>");
+	// print("pub(crate) fn finalize_block<BE, Block, Client>");
 	// NOTE: lock must be held through writing to DB to avoid race. this lock
 	//       also implicitly synchronizes the check for last finalized number
 	//       below.

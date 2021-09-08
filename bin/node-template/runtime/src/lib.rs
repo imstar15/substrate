@@ -330,41 +330,41 @@ pub type Executive = frame_executive::Executive<
 impl_runtime_apis! {
 	impl sp_api::Core<Block> for Runtime {
 		fn version() -> RuntimeVersion {
-			print("version");
+			// print("version");
 			VERSION
 		}
 
 		fn execute_block(block: Block) {
-			print("execute_block");
+			// print("execute_block");
 			Executive::execute_block(block);
 		}
 
 		fn initialize_block(header: &<Block as BlockT>::Header) {
-			print("node-template initialize_block");
+			// print("node-template initialize_block");
 			Executive::initialize_block(header)
 		}
 	}
 
 	impl sp_api::Metadata<Block> for Runtime {
 		fn metadata() -> OpaqueMetadata {
-			print("OpaqueMetadata");
+			// print("OpaqueMetadata");
 			Runtime::metadata().into()
 		}
 	}
 
 	impl sp_block_builder::BlockBuilder<Block> for Runtime {
 		fn apply_extrinsic(extrinsic: <Block as BlockT>::Extrinsic) -> ApplyExtrinsicResult {
-			print("apply_extrinsic");
+			// print("apply_extrinsic");
 			Executive::apply_extrinsic(extrinsic)
 		}
 
 		fn finalize_block() -> <Block as BlockT>::Header {
-			print("finalize_block");
+			// print("finalize_block");
 			Executive::finalize_block()
 		}
 
 		fn inherent_extrinsics(data: sp_inherents::InherentData) -> Vec<<Block as BlockT>::Extrinsic> {
-			print("inherent_extrinsics");
+			// print("inherent_extrinsics");
 			data.create_extrinsics()
 		}
 
@@ -372,12 +372,12 @@ impl_runtime_apis! {
 			block: Block,
 			data: sp_inherents::InherentData,
 		) -> sp_inherents::CheckInherentsResult {
-			print("check_inherents");
+			// print("check_inherents");
 			data.check_extrinsics(&block)
 		}
 
 		fn random_seed() -> <Block as BlockT>::Hash {
-			print("random_seed");
+			// print("random_seed");
 			RandomnessCollectiveFlip::random_seed().0
 		}
 	}
