@@ -687,7 +687,7 @@ pub struct GrandpaParams<Block: BlockT, C, N, SC, VR> {
 	/// The voter state is exposed at an RPC endpoint.
 	pub shared_voter_state: SharedVoterState,
 	/// TelemetryHandle instance.
-	pub telemetry: Option<TelemetryHandle>,slot_lenience_exponential
+	pub telemetry: Option<TelemetryHandle>,
 }
 
 /// Returns the configuration value to put in
