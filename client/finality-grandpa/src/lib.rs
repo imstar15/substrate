@@ -687,7 +687,7 @@ pub struct GrandpaParams<Block: BlockT, C, N, SC, VR> {
 	/// The voter state is exposed at an RPC endpoint.
 	pub shared_voter_state: SharedVoterState,
 	/// TelemetryHandle instance.
-	pub telemetry: Option<TelemetryHandle>,
+	pub telemetry: Option<TelemetryHandle>,slot_lenience_exponential
 }
 
 /// Returns the configuration value to put in
@@ -1101,7 +1101,7 @@ where
 	fn poll(mut self: Pin<&mut Self>, cx: &mut Context) -> Poll<Self::Output> {
 		print("poll");
 		match Future::poll(Pin::new(&mut self.voter), cx) {
-			Poll::Pending => {}
+			Poll::Pending => { print("Future::poll(Pin::new(&mut self.voter), cx) Poll::Pending"); }
 			Poll::Ready(Ok(())) => {
 				// voters don't conclude naturally
 				print("Poll::Ready(Ok(()))");
@@ -1123,7 +1123,7 @@ where
 		}
 
 		match Stream::poll_next(Pin::new(&mut self.voter_commands_rx), cx) {
-			Poll::Pending => {}
+			Poll::Pending => { print("Stream::poll_next(Pin::new(&mut self.voter_commands_rx), cx) Poll::Pending"); }
 			Poll::Ready(None) => {
 				print("Stream::poll_next Poll::Ready(None)");
 				// the `voter_commands_rx` stream should never conclude since it's never closed.
@@ -1138,6 +1138,8 @@ where
 				cx.waker().wake_by_ref();
 			}
 		}
+
+		print("Future::poll(Pin::new(&mut self.network), cx)");
 
 		Future::poll(Pin::new(&mut self.network), cx)
 	}
