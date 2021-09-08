@@ -184,7 +184,9 @@ where
 			InitializeBlock::Do(ref init_block)
 				if init_block.borrow().as_ref().map(|id| id != at).unwrap_or(true) => {
 				print("initialize_block_fn!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-				initialize_block_fn()?;
+				let result = initialize_block_fn()?;
+				print("initialize_block_fn!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! 2222222222");
+				result
 			},
 			// We don't need to initialize the runtime at a block.
 			_ => {},
