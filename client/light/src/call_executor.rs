@@ -27,7 +27,7 @@ use sp_core::{
 	convert_hash, NativeOrEncoded, traits::{CodeExecutor, SpawnNamed},
 };
 use sp_runtime::{
-	generic::BlockId, traits::{One, Block as BlockT, Header as HeaderT, HashFor},
+	generic::BlockId, traits::{One, Block as BlockT, Header as HeaderT, HashFor}, print,
 };
 use sp_externalities::Extensions;
 use sp_state_machine::{
@@ -121,7 +121,7 @@ impl<Block, B, Local> CallExecutor<Block> for
 	) -> ClientResult<NativeOrEncoded<R>> where ExecutionManager<EM>: Clone {
 		// there's no actual way/need to specify native/wasm execution strategy on light node
 		// => we can safely ignore passed values
-
+		print("light call_executor contextual_call");
 		match self.backend.is_local_state_available(at) {
 			true => CallExecutor::contextual_call::<
 				_,

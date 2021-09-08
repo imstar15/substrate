@@ -19,7 +19,7 @@
 use std::{sync::Arc, panic::UnwindSafe, result, cell::RefCell};
 use codec::{Encode, Decode};
 use sp_runtime::{
-	generic::BlockId, traits::{Block as BlockT, HashFor, NumberFor},
+	generic::BlockId, traits::{Block as BlockT, HashFor, NumberFor}, print,
 };
 use sp_state_machine::{
 	self, OverlayedChanges, Ext, ExecutionManager, StateMachine, ExecutionStrategy,
@@ -178,6 +178,8 @@ where
 		recorder: &Option<ProofRecorder<Block>>,
 		extensions: Option<Extensions>,
 	) -> Result<NativeOrEncoded<R>, sp_blockchain::Error> where ExecutionManager<EM>: Clone {
+		print("service call_executor contextual_call");
+
 		match initialize_block {
 			InitializeBlock::Do(ref init_block)
 				if init_block.borrow().as_ref().map(|id| id != at).unwrap_or(true) => {
