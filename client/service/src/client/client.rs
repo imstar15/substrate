@@ -1180,7 +1180,9 @@ impl<B, E, Block, RA> Client<B, E, Block, RA> where
 
 	/// Prepare in-memory header that is used in execution environment.
 	fn prepare_environment_block(&self, parent: &BlockId<Block>) -> sp_blockchain::Result<Block::Header> {
+		print("prepare_environment_block 11111111");
 		let parent_hash = self.backend.blockchain().expect_block_hash_from_id(parent)?;
+		print("prepare_environment_block 22222222");
 		Ok(<<Block as BlockT>::Header as HeaderT>::new(
 			self.backend.blockchain().expect_block_number_from_id(parent)? + One::one(),
 			Default::default(),
