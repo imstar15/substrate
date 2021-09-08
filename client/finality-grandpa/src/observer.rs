@@ -78,6 +78,7 @@ where
 	BE: Backend<Block>,
 	Client: crate::ClientForGrandpa<Block, BE>,
 {
+	print("grandpa_observer<BE, Block: BlockT, Client, S, F>");
 	let authority_set = authority_set.clone();
 	let client = client.clone();
 	let voters = voters.clone();

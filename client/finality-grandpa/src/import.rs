@@ -646,6 +646,7 @@ where
 		enacts_change: bool,
 		initial_sync: bool,
 	) -> Result<(), ConsensusError> {
+		print("import_justification!!!!!!!!!!!!!!!!!!!!!!!!!!!");
 		if justification.0 != GRANDPA_ENGINE_ID {
 			return Err(ConsensusError::ClientImport(
 				"GRANDPA can only import GRANDPA Justifications.".into(),
