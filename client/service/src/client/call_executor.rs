@@ -183,6 +183,7 @@ where
 		match initialize_block {
 			InitializeBlock::Do(ref init_block)
 				if init_block.borrow().as_ref().map(|id| id != at).unwrap_or(true) => {
+				print("initialize_block_fn!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
 				initialize_block_fn()?;
 			},
 			// We don't need to initialize the runtime at a block.
