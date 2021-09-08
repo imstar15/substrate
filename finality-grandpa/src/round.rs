@@ -272,17 +272,22 @@ impl<Id, H, N, Signature> Round<Id, H, N, Signature> where
 		signer: Id,
 		signature: Signature,
 	) -> Result<ImportResult<Id, Prevote<H, N>, Signature>, crate::Error> {
-		// print("import_prevote");
+		print("import_prevote");
 		let mut import_result = ImportResult::default();
+
+		print("import_prevote 111111");
 
 		let info = match self.context.voters().get(&signer) {
 			Some(info) => info.clone(),
 			None => return Ok(import_result),
 		};
 
+		print("import_prevote 22222222");
+
 		import_result.valid_voter = true;
 		let weight = info.weight();
 
+		print("import_prevote 33333333");
 		let equivocation = {
 			let multiplicity = match self.prevote.add_vote(signer.clone(), prevote.clone(), signature.clone(), weight) {
 				AddVoteResult { multiplicity: Some(m), .. } => m,
@@ -330,6 +335,8 @@ impl<Id, H, N, Signature> Round<Id, H, N, Signature> where
 			}
 		};
 
+		print("import_prevote 4444444444");
+
 		// update prevote-GHOST
 		let threshold = self.threshold();
 		if self.prevote.current_weight >= threshold {
@@ -339,8 +346,12 @@ impl<Id, H, N, Signature> Round<Id, H, N, Signature> where
 			);
 		}
 
+		print("import_prevote 555555555");
+
 		// print("import_prevote self.update()");
 		self.update();
+
+		print("import_prevote 66666666666");
 
 		import_result.equivocation = equivocation;
 		Ok(import_result)
