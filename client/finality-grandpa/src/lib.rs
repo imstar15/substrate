@@ -693,8 +693,8 @@ pub struct GrandpaParams<Block: BlockT, C, N, SC, VR> {
 /// Returns the configuration value to put in
 /// [`sc_network::config::NetworkConfiguration::extra_sets`].
 pub fn grandpa_peers_set_config() -> sc_network::config::NonDefaultSetConfig {
+	print("grandpa_peers_set_config");
 	sc_network::config::NonDefaultSetConfig {
-		print("grandpa_peers_set_config");
 		notifications_protocol: communication::GRANDPA_PROTOCOL_NAME.into(),
 		// Notifications reach ~256kiB in size at the time of writing on Kusama and Polkadot.
 		max_notification_size: 1024 * 1024,
