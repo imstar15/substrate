@@ -312,7 +312,7 @@ decl_module! {
 		}
 
 		fn on_finalize(block_number: T::BlockNumber) {
-			print("on_finalize");
+			print("pallet-grandpa on_finalize");
 			// check for scheduled pending authority set changes
 			if let Some(pending_change) = <PendingChange<T>>::get() {
 				// emit signal if we're at the block that scheduled the change
@@ -337,6 +337,7 @@ decl_module! {
 
 				// enact the change if we've reached the enacting block
 				if block_number == pending_change.scheduled_at + pending_change.delay {
+					print("Self::set_grandpa_authorities");
 					Self::set_grandpa_authorities(&pending_change.next_authorities);
 					Self::deposit_event(
 						Event::NewAuthorities(pending_change.next_authorities)

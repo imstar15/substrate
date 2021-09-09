@@ -131,7 +131,7 @@ use sp_runtime::{
 		self, Header, Zero, One, Checkable, Applyable, CheckEqual, ValidateUnsigned, NumberFor,
 		Dispatchable, Saturating,
 	},
-	transaction_validity::{TransactionValidity, TransactionSource},
+	transaction_validity::{TransactionValidity, TransactionSource}, print,
 };
 use codec::{Codec, Encode};
 use frame_system::DigestOf;
@@ -376,6 +376,7 @@ where
 	}
 
 	fn idle_and_finalize_hook(block_number: NumberFor<Block>) {
+		print("idle_and_finalize_hook");
 		let weight =  <frame_system::Pallet<System>>::block_weight();
 		let max_weight =  <System::BlockWeights as frame_support::traits::Get<_>>::get().max_block;
 		let mut remaining_weight = max_weight.saturating_sub(weight.total());
