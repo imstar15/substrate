@@ -323,6 +323,7 @@ mod tests {
 
 				let justification = GrandpaJustification::from_commit(&client, 42, commit).unwrap();
 
+				print("client.finalize_block>????????????");
 				client
 					.finalize_block(
 						BlockId::Hash(target_hash),

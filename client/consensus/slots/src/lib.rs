@@ -476,7 +476,7 @@ where
 
 	async move {
 		loop {
-			print("loop");
+			// print("loop");
 			let slot_info = match slots.next_slot().await {
 				Ok(slot) => slot,
 				Err(err) => {
@@ -514,7 +514,7 @@ where
 					err,
 				);
 			} else {
-				print("worker.on_slot(chain_head, slot_info).await;");
+				// print("worker.on_slot(chain_head, slot_info).await;");
 				worker.on_slot(chain_head, slot_info).await;
 			}
 		}

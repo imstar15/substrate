@@ -1450,6 +1450,7 @@ fn grandpa_environment_respects_voting_rules() {
 		16,
 	);
 
+	print("peer.client().finalize_block 111111111");
 	// we finalize block 19 with block 21 being the best block
 	peer.client().finalize_block(BlockId::Number(19), None, false).unwrap();
 
@@ -1470,6 +1471,7 @@ fn grandpa_environment_respects_voting_rules() {
 		19,
 	);
 
+	print("peer.client().finalize_block 222222222");
 	// we finalize block 21 with block 21 being the best block
 	peer.client().finalize_block(BlockId::Number(21), None, false).unwrap();
 

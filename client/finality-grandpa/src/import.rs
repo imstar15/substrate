@@ -39,6 +39,7 @@ use sp_runtime::generic::{BlockId, OpaqueDigestItemId};
 use sp_runtime::traits::{
 	Block as BlockT, DigestFor, Header as HeaderT, NumberFor, Zero,
 };
+use sp_runtime::print;
 
 use crate::{Error, CommandOrError, NewAuthoritySet, VoterCommand};
 use crate::authorities::{AuthoritySet, SharedAuthoritySet, DelayKind, PendingChange};
@@ -663,6 +664,7 @@ where
 			Ok(justification) => justification,
 		};
 
+		print("import finalize_block");
 		let result = finalize_block(
 			self.inner.clone(),
 			&self.authority_set,

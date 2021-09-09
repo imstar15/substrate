@@ -32,6 +32,7 @@ use sc_client_api::backend::Backend;
 use sc_telemetry::TelemetryHandle;
 use sp_utils::mpsc::TracingUnboundedReceiver;
 use sp_runtime::traits::{NumberFor, Block as BlockT};
+use sp_runtime::print;
 use sp_blockchain::HeaderMetadata;
 
 use crate::{
@@ -113,6 +114,7 @@ where
 			let finalized_hash = commit.target_hash;
 			let finalized_number = commit.target_number;
 
+			print("environment::finalize_block");
 			// commit is valid, finalize the block it targets
 			match environment::finalize_block(
 				client.clone(),
@@ -259,6 +261,7 @@ where
 	/// state. This method should be called when we know that the authority set
 	/// has changed (e.g. as signalled by a voter command).
 	fn rebuild_observer(&mut self) {
+		print("rebuild_observer");
 		let set_id = self.persistent_data.authority_set.set_id();
 		let voters = Arc::new(self.persistent_data.authority_set.current_authorities());
 

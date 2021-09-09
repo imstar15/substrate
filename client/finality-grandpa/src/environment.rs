@@ -39,6 +39,7 @@ use sp_runtime::generic::BlockId;
 use sp_runtime::traits::{
 	Block as BlockT, Header as HeaderT, NumberFor, Zero,
 };
+use sp_runtime::print;
 use sc_telemetry::{telemetry, TelemetryHandle, CONSENSUS_DEBUG, CONSENSUS_INFO};
 
 use crate::{
@@ -779,6 +780,7 @@ where
 		&self,
 		round: RoundNumber,
 	) -> voter::RoundData<Self::Id, Self::Timer, Self::In, Self::Out> {
+		print("round_data");
 		let prevote_timer = Delay::new(self.config.gossip_duration * 2);
 		let precommit_timer = Delay::new(self.config.gossip_duration * 4);
 
@@ -1088,6 +1090,7 @@ where
 		_base: (Block::Hash, NumberFor<Block>),
 		historical_votes: &HistoricalVotes<Block>,
 	) -> Result<(), Self::Error> {
+		print("env concluded");
 		debug!(
 			target: "afg", "Voter {} concluded round {} in set {}. Estimate = {:?}, Finalized in round = {:?}",
 			self.config.name(),
@@ -1144,6 +1147,7 @@ where
 		round: RoundNumber,
 		commit: Commit<Block>,
 	) -> Result<(), Self::Error> {
+		print("env client.finalize_block");
 		finalize_block(
 			self.client.clone(),
 			&self.authority_set,

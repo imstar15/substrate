@@ -201,6 +201,7 @@ where
 
 		match recorder {
 			Some(recorder) => {
+				print("recorder");
 				let trie_state = state.as_trie_backend()
 					.ok_or_else(||
 						Box::new(sp_state_machine::ExecutionError::UnableToGenerateProof) as Box<dyn sp_state_machine::Error>
@@ -231,12 +232,16 @@ where
 				);
 				// TODO: https://github.com/paritytech/substrate/issues/4455
 				// .with_storage_transaction_cache(storage_transaction_cache.as_mut().map(|c| &mut **c))
-				state_machine.execute_using_consensus_failure_handler(
+				print("state_machine.execute_using_consensus_failure_handler 1111111");
+				let result = state_machine.execute_using_consensus_failure_handler(
 					execution_manager,
 					native_call.map(|n| || (n)().map_err(|e| Box::new(e) as Box<_>)),
-				)
+				);
+				print("state_machine.execute_using_consensus_failure_handler 2222222222");
+				result
 			},
 			None => {
+				print("None");
 				let state_runtime_code = sp_state_machine::backend::BackendRuntimeCode::new(&state);
 				let runtime_code = state_runtime_code.runtime_code()
 					.map_err(sp_blockchain::Error::RuntimeCode)?;
@@ -253,10 +258,13 @@ where
 					&runtime_code,
 					self.spawn_handle.clone(),
 				).with_storage_transaction_cache(storage_transaction_cache.as_mut().map(|c| &mut **c));
-				state_machine.execute_using_consensus_failure_handler(
+				print("state_machine.execute_using_consensus_failure_handler 1111111");
+				let result = state_machine.execute_using_consensus_failure_handler(
 					execution_manager,
 					native_call.map(|n| || (n)().map_err(|e| Box::new(e) as Box<_>)),
-				)
+				);
+				print("state_machine.execute_using_consensus_failure_handler 2222222222");
+				result
 			}
 		}.map_err(Into::into)
 	}

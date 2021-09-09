@@ -314,6 +314,7 @@ pub(crate) mod tests {
 		}
 
 		for block in to_finalize {
+			print("client.finalize_block for");
 			client.finalize_block(BlockId::Number(*block), None).unwrap();
 		}
 		(client, backend, blocks)

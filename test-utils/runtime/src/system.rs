@@ -30,6 +30,7 @@ use sp_runtime::{
 	transaction_validity::{
 		TransactionValidity, ValidTransaction, InvalidTransaction, TransactionValidityError,
 	},
+	print,
 };
 use codec::{KeyedVec, Encode, Decode};
 use frame_system::Config;
@@ -112,6 +113,7 @@ pub fn execute_block(mut block: Block) {
 }
 
 fn execute_block_with_state_root_handler(block: &mut Block, mode: Mode) {
+	print("execute_block_with_state_root_handler");
 	let header = &mut block.header;
 
 	initialize_block(header);

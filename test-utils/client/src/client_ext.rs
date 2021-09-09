@@ -27,6 +27,7 @@ use sp_consensus::{
 use sp_runtime::{Justification, Justifications};
 use sp_runtime::traits::{Block as BlockT};
 use sp_runtime::generic::BlockId;
+use sp_runtime::print;
 use codec::alloc::collections::hash_map::HashMap;
 
 /// Extension trait for a test client.
@@ -76,6 +77,7 @@ impl<B, E, RA, Block> ClientExt<Block> for Client<B, E, Block, RA>
 		id: BlockId<Block>,
 		justification: Option<Justification>,
 	) -> sp_blockchain::Result<()> {
+		print("Finalizer::finalize_block");
 		Finalizer::finalize_block(self, id, justification, true)
 	}
 

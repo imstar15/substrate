@@ -1864,6 +1864,7 @@ impl<B, E, Block, RA> Finalizer<Block, B> for Client<B, E, Block, RA> where
 		justification: Option<Justification>,
 		notify: bool,
 	) -> sp_blockchain::Result<()> {
+		print("kkkkkkkk finalize_block");
 		self.lock_import_and_run(|operation| {
 			self.apply_finality(operation, id, justification, notify)
 		})
@@ -1892,6 +1893,7 @@ impl<B, E, Block, RA> Finalizer<Block, B> for &Client<B, E, Block, RA> where
 		justification: Option<Justification>,
 		notify: bool,
 	) -> sp_blockchain::Result<()> {
+		print("asdfalksdjflasdjlf finalize_block");
 		(**self).finalize_block(id, justification, notify)
 	}
 }

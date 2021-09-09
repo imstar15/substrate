@@ -34,6 +34,7 @@ use sp_state_machine::{
 };
 use sp_runtime::{generic::BlockId, Justification, Justifications, Storage};
 use sp_runtime::traits::{Block as BlockT, NumberFor, Zero, Header, HashFor};
+use sp_runtime::print;
 use sp_blockchain::{Error as ClientError, Result as ClientResult};
 use sc_client_api::{
 	backend::{
@@ -196,6 +197,7 @@ impl<S, Block> ClientBackend<Block> for Backend<S, HashFor<Block>>
 		block: BlockId<Block>,
 		_justification: Option<Justification>,
 	) -> ClientResult<()> {
+		print("self.blockchain.storage().finalize_header(block)");
 		self.blockchain.storage().finalize_header(block)
 	}
 

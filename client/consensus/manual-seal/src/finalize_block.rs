@@ -23,6 +23,7 @@ use sp_runtime::{
 	Justification,
 	traits::Block as BlockT,
 	generic::BlockId,
+	print,
 };
 use std::sync::Arc;
 use sc_client_api::backend::{Backend as ClientBackend, Finalizer};
@@ -58,6 +59,7 @@ pub async fn finalize_block<B, F, CB>(params: FinalizeBlockParams<B, F, CB>)
 		..
 	} = params;
 
+	print("finalizer.finalize_block");
 	match finalizer.finalize_block(BlockId::Hash(hash), justification, true) {
 		Err(e) => {
 			log::warn!("Failed to finalize block {:?}", e);

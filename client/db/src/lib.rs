@@ -75,6 +75,7 @@ use sp_runtime::{generic::{DigestItem, BlockId}, Justification, Justifications, 
 use sp_runtime::traits::{
 	Block as BlockT, Header as HeaderT, NumberFor, Zero, One, SaturatedConversion, HashFor,
 };
+use sp_runtime::print;
 use sp_state_machine::{
 	DBValue, ChangesTrieTransaction, ChangesTrieCacheAction, UsageInfo as StateUsageInfo,
 	StorageCollection, ChildStorageCollection, OffchainChangesCollection,
@@ -1765,6 +1766,7 @@ impl<Block: BlockT> sc_client_api::backend::Backend<Block> for Backend<Block> {
 		block: BlockId<Block>,
 		justification: Option<Justification>,
 	) -> ClientResult<()> {
+		print("db client.finalize_block");
 		let mut transaction = Transaction::new();
 		let hash = self.blockchain.expect_block_hash_from_id(&block)?;
 		let header = self.blockchain.expect_header(block)?;

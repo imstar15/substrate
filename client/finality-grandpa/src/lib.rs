@@ -1099,23 +1099,23 @@ where
 	type Output = Result<(), Error>;
 
 	fn poll(mut self: Pin<&mut Self>, cx: &mut Context) -> Poll<Self::Output> {
-		print("poll");
+		// print("poll");
 		match Future::poll(Pin::new(&mut self.voter), cx) {
-			Poll::Pending => { print("Future::poll(Pin::new(&mut self.voter), cx) Poll::Pending"); }
+			Poll::Pending => {}
 			Poll::Ready(Ok(())) => {
 				// voters don't conclude naturally
-				print("Poll::Ready(Ok(()))");
+				// print("Poll::Ready(Ok(()))");
 				return Poll::Ready(
 					Err(Error::Safety("finality-grandpa inner voter has concluded.".into()))
 				)
 			}
 			Poll::Ready(Err(CommandOrError::Error(e))) => {
-				print("Poll::Ready(Err(CommandOrError::Error(e)))");
+				// print("Poll::Ready(Err(CommandOrError::Error(e)))");
 				// return inner observer error
 				return Poll::Ready(Err(e))
 			}
 			Poll::Ready(Err(CommandOrError::VoterCommand(command))) => {
-				print("Poll::Ready(Err(CommandOrError::VoterCommand(command)))");
+				// print("Poll::Ready(Err(CommandOrError::VoterCommand(command)))");
 				// some command issued internally
 				self.handle_voter_command(command)?;
 				cx.waker().wake_by_ref();
@@ -1123,23 +1123,23 @@ where
 		}
 
 		match Stream::poll_next(Pin::new(&mut self.voter_commands_rx), cx) {
-			Poll::Pending => { print("Stream::poll_next(Pin::new(&mut self.voter_commands_rx), cx) Poll::Pending"); }
+			Poll::Pending => {}
 			Poll::Ready(None) => {
-				print("Stream::poll_next Poll::Ready(None)");
+				// print("Stream::poll_next Poll::Ready(None)");
 				// the `voter_commands_rx` stream should never conclude since it's never closed.
 				return Poll::Ready(
 					Err(Error::Safety("`voter_commands_rx` was closed.".into()))
 				)
 			}
 			Poll::Ready(Some(command)) => {
-				print("Stream::poll_next Poll::Ready(Some(command))");
+				// print("Stream::poll_next Poll::Ready(Some(command))");
 				// some command issued externally
 				self.handle_voter_command(command)?;
 				cx.waker().wake_by_ref();
 			}
 		}
 
-		print("Future::poll(Pin::new(&mut self.network), cx)");
+		// print("Future::poll(Pin::new(&mut self.network), cx)");
 
 		Future::poll(Pin::new(&mut self.network), cx)
 	}

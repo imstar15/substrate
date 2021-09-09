@@ -60,6 +60,7 @@ use sp_runtime::traits::{
 	self, BlakeTwo256, Block as BlockT, StaticLookup, SaturatedConversion, ConvertInto, OpaqueKeys,
 	NumberFor,
 };
+use sp_runtime::print;
 use sp_version::RuntimeVersion;
 #[cfg(any(feature = "std", test))]
 use sp_version::NativeVersion;
@@ -1222,6 +1223,7 @@ impl_runtime_apis! {
 		}
 
 		fn finalize_block() -> <Block as BlockT>::Header {
+			print("Executive::finalize_block()");
 			Executive::finalize_block()
 		}
 

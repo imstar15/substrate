@@ -29,6 +29,7 @@ use sc_client_api::backend::AuxStore;
 use sp_blockchain::{Error as ClientError, Result as ClientResult};
 use sp_finality_grandpa::{AuthorityList, RoundNumber, SetId};
 use sp_runtime::traits::{Block as BlockT, NumberFor};
+use sp_runtime::print;
 
 use crate::authorities::{
 	AuthoritySet, AuthoritySetChanges, DelayKind, PendingChange, SharedAuthoritySet,
@@ -538,6 +539,7 @@ pub(crate) fn write_concluded_round<Block: BlockT, B: AuxStore>(
 	backend: &B,
 	round_data: &CompletedRound<Block>,
 ) -> ClientResult<()> {
+	print("write_concluded_round");
 	let mut key = CONCLUDED_ROUNDS.to_vec();
 	let round_number = round_data.number;
 	round_number.using_encoded(|n| key.extend(n));

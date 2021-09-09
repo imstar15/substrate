@@ -28,6 +28,7 @@ use sp_core::{
 use sp_runtime::generic::BlockId;
 use sp_runtime::traits::{Block as BlockT, Header as HeaderT, Zero, NumberFor, HashFor};
 use sp_runtime::{Justification, Justifications, Storage};
+use sp_runtime::print;
 use sp_state_machine::{
 	ChangesTrieTransaction, InMemoryBackend, Backend as StateBackend, StorageCollection,
 	ChildStorageCollection, IndexOperation,
@@ -723,6 +724,7 @@ impl<Block: BlockT> backend::Backend<Block> for Backend<Block> where Block::Hash
 		block: BlockId<Block>,
 		justification: Option<Justification>,
 	) -> sp_blockchain::Result<()> {
+		print("self.blockchain.finalize_header");
 		self.blockchain.finalize_header(block, justification)
 	}
 

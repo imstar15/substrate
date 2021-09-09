@@ -27,7 +27,7 @@ use sp_consensus::{
 };
 use sp_blockchain::HeaderBackend;
 use sp_inherents::InherentDataProviders;
-use sp_runtime::{traits::Block as BlockT, Justifications, ConsensusEngineId};
+use sp_runtime::{traits::Block as BlockT, Justifications, ConsensusEngineId, print};
 use sc_client_api::backend::{Backend as ClientBackend, Finalizer};
 use sc_transaction_pool::txpool;
 use std::{sync::Arc, marker::PhantomData};
@@ -198,6 +198,7 @@ pub async fn run_manual_seal<B, BI, CB, E, C, A, SC, CS>(
 			}
 			EngineCommand::FinalizeBlock { hash, sender, justification } => {
 				let justification = justification.map(|j| (MANUAL_SEAL_ENGINE_ID, j));
+				print("manual-seal finalize_block");
 				finalize_block(
 					FinalizeBlockParams {
 						hash,

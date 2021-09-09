@@ -63,6 +63,7 @@ use sc_network::config::ProtocolConfig;
 use sp_runtime::generic::{BlockId, OpaqueDigestItemId};
 use sp_runtime::traits::{Block as BlockT, Header as HeaderT, NumberFor};
 use sp_runtime::{Justification, Justifications};
+use sp_runtime::print;
 use substrate_test_runtime_client::AccountKeyring;
 use sc_service::client::Client;
 pub use sc_network::config::EmptyTransactionPool;
@@ -206,6 +207,7 @@ impl PeersClient {
 		justification: Option<Justification>,
 		notify: bool
 	) -> ClientResult<()> {
+		print("network finalize_block");
 		match *self {
 			PeersClient::Full(ref client, ref _backend) => client.finalize_block(id, justification, notify),
 			PeersClient::Light(ref client, ref _backend) => client.finalize_block(id, justification, notify),

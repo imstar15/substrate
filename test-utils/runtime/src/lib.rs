@@ -44,6 +44,7 @@ use sp_runtime::{
 		BlindCheckable, BlakeTwo256, Block as BlockT, Extrinsic as ExtrinsicT,
 		GetNodeBlockType, GetRuntimeBlockType, Verify, IdentityLookup,
 	},
+	print,
 };
 #[cfg(feature = "std")]
 use sp_runtime::traits::NumberFor;
@@ -655,6 +656,7 @@ cfg_if! {
 				}
 
 				fn finalize_block() -> <Block as BlockT>::Header {
+					print("system::finalize_block sadfadsfasdf");
 					system::finalize_block()
 				}
 
@@ -912,6 +914,7 @@ cfg_if! {
 				}
 
 				fn finalize_block() -> <Block as BlockT>::Header {
+					print("system::finalize_block");
 					system::finalize_block()
 				}
 
