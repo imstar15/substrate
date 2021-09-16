@@ -1658,7 +1658,6 @@ dependencies = [
 [[package]]
 name = "finality-grandpa"
 version = "0.14.0"
-source = "git+https://github.com/imstar15/finality-grandpa?branch=v0.14.0#034f11341813d7282e008c8a8673c58a9a5bff26"
 dependencies = [
  "either",
  "futures 0.3.13",
@@ -1667,7 +1666,9 @@ dependencies = [
  "num-traits",
  "parity-scale-codec",
  "parking_lot 0.11.1",
+ "quickcheck",
  "rand 0.8.3",
+ "sp-runtime",
 ]
 
 [[package]]
@@ -5045,7 +5046,7 @@ dependencies = [
 name = "pallet-grandpa"
 version = "3.0.0"
 dependencies = [
- "finality-grandpa 0.14.0 (registry+https://github.com/rust-lang/crates.io-index)",
+ "finality-grandpa 0.14.0",
  "frame-benchmarking",
  "frame-election-provider-support",
  "frame-support",
@@ -7469,7 +7470,7 @@ dependencies = [
  "backtrace",
  "derive_more",
  "dyn-clone",
- "finality-grandpa 0.14.0 (git+https://github.com/imstar15/finality-grandpa?branch=v0.14.0)",
+ "finality-grandpa 0.14.0",
  "fork-tree",
  "futures 0.3.13",
  "futures-timer 3.0.2",
@@ -8862,7 +8863,7 @@ dependencies = [
 name = "sp-finality-grandpa"
 version = "3.0.0"
 dependencies = [
- "finality-grandpa 0.14.0 (git+https://github.com/imstar15/finality-grandpa?branch=v0.14.0)",
+ "finality-grandpa 0.14.0",
  "log",
  "parity-scale-codec",
  "serde",
