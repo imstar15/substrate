@@ -789,7 +789,7 @@ where
 
 		let local_id = local_authority_id(&self.voters, self.config.keystore.as_ref());
 
-		print("round_data 1111111");
+		// print("round_data 1111111");
 		let has_voted = match self.voter_set_state.has_voted(round) {
 			HasVoted::Yes(id, vote) => {
 				if local_id.as_ref().map(|k| k == &id).unwrap_or(false) {
@@ -801,7 +801,7 @@ where
 			HasVoted::No => HasVoted::No,
 		};
 
-		print("round_data 222222222");
+		// print("round_data 222222222");
 
 		// NOTE: we cache the local authority id that we'll be using to vote on the
 		// given round. this is done to make sure we only check for available keys
@@ -814,7 +814,7 @@ where
 			self.voter_set_state.started_voting_on(round, id.clone());
 		}
 
-		print("round_data 3333333333");
+		// print("round_data 3333333333");
 		// we can only sign when we have a local key in the authority set
 		// and we have a reference to the keystore.
 		let keystore = match (local_id.as_ref(), self.config.keystore.as_ref()) {
@@ -830,7 +830,7 @@ where
 			has_voted,
 		);
 
-		print("round_data 4444444444");
+		// print("round_data 4444444444");
 
 		// schedule incoming messages from the network to be held until
 		// corresponding blocks are imported.
@@ -843,12 +843,12 @@ where
 			None,
 		).map_err(Into::into));
 
-		print("round_data 555555555");
+		// print("round_data 555555555");
 
 		// schedule network message cleanup when sink drops.
 		let outgoing = Box::pin(outgoing.sink_err_into());
 
-		print("round_data 666666666");
+		// print("round_data 666666666");
 
 		voter::RoundData {
 			voter_id: local_id,

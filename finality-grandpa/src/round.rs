@@ -596,7 +596,9 @@ impl<Id, H, N, Signature> Round<Id, H, N, Signature> where
 				self.graph.find_ghost(Some((b_hash, b_num)), possible_to_precommit)
 					.map_or(true, |x| x == (g_hash, g_num))
 			}
-		})
+		});
+		print("self.completable:");
+		print(self.completable);
 	}
 
 	/// Fetch the "round-estimate": the best block which might have been finalized
