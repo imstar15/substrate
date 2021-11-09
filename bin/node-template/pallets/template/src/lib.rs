@@ -18,6 +18,8 @@ mod benchmarking;
 pub mod pallet {
 	use frame_support::{dispatch::DispatchResult, pallet_prelude::*};
 	use frame_system::pallet_prelude::*;
+	use sp_runtime::traits::Printable;
+	use sp_runtime::print;
 
 	/// Configure the pallet by specifying the parameters and types on which it depends.
 	#[pallet::config]
@@ -58,6 +60,16 @@ pub mod pallet {
 		StorageOverflow,
 	}
 
+	impl<T: Config> Printable for Error<T> {
+			fn print(&self) {
+					match self {
+							Error::NoneValue => "Invalid Value".print(),
+							Error::StorageOverflow => "Value Exceeded and Overflowed".print(),
+							_ => "Invalid Error Case".print(),
+					}
+			}
+	}
+
 	// Dispatchable functions allows users to interact with the pallet and invoke state changes.
 	// These functions materialize as "extrinsics", which are often compared to transactions.
 	// Dispatchable functions must be annotated with a weight and must return a DispatchResult.
@@ -75,6 +87,8 @@ pub mod pallet {
 			// Update storage.
 			<Something<T>>::put(something);
 
+			log::info!("called by {:?}", who);
+
 			// Emit an event.
 			Self::deposit_event(Event::SomethingStored(something, who));
 			// Return a successful DispatchResultWithPostInfo
@@ -89,7 +103,11 @@ pub mod pallet {
 			// Read a value from storage.
 			match <Something<T>>::get() {
 				// Return an error if the value has not been set.
-				None => Err(Error::<T>::NoneValue)?,
+				None => {
+					log::info!("{:#?}", Error::<T>::NoneValue);
+					print(Error::<T>::NoneValue);
+					Err(Error::<T>::NoneValue)?
+				},
 				Some(old) => {
 					// Increment the value read from storage; will error in the event of overflow.
 					let new = old.checked_add(1).ok_or(Error::<T>::StorageOverflow)?;
