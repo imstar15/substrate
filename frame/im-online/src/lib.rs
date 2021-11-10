@@ -797,6 +797,12 @@ impl<T: Config> OneSessionHandler<T::AccountId> for Pallet<T> {
 		ReceivedHeartbeats::<T>::remove_prefix(&T::ValidatorSet::session_index(), None);
 		AuthoredBlocks::<T>::remove_prefix(&T::ValidatorSet::session_index(), None);
 
+		log::debug!(
+			target: "runtime::im-online",
+			"offenders: {:?}",
+			offenders,
+		);
+
 		if offenders.is_empty() {
 			Self::deposit_event(Event::<T>::AllGood);
 		} else {
