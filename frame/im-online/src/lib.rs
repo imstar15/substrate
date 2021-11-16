@@ -538,6 +538,21 @@ impl<T: Config> Pallet<T> {
 	fn is_online_aux(authority_index: AuthIndex, authority: &ValidatorId<T>) -> bool {
 		let current_session = T::ValidatorSet::session_index();
 
+		let is_contains_key = ReceivedHeartbeats::<T>::contains_key(&current_session, &authority_index);
+		let number_of_authored_blocks = AuthoredBlocks::<T>::get(&current_session, authority);
+
+		sp_runtime::print("is_online_aux");
+		sp_runtime::print(authority_index);
+		// sp_runtime::print(authority);
+		log::info!(
+			target: "runtime::im-online",
+			"authority: {:?}",
+			authority
+		);
+		sp_runtime::print(is_contains_key);
+		sp_runtime::print(number_of_authored_blocks);
+		sp_runtime::print("is_online_aux ===============");
+
 		ReceivedHeartbeats::<T>::contains_key(&current_session, &authority_index) ||
 			AuthoredBlocks::<T>::get(&current_session, authority) != 0
 	}
