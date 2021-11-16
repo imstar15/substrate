@@ -583,9 +583,11 @@ impl<T: Config> Pallet<T> {
 	pub(crate) fn send_heartbeats(
 		block_number: T::BlockNumber,
 	) -> OffchainResult<T, impl Iterator<Item = OffchainResult<T, ()>>> {
-		sp_runtime::print("send_heartbeats 11111111111");
+		sp_runtime::print("send_heartbeats");
 		const START_HEARTBEAT_RANDOM_PERIOD: Permill = Permill::from_percent(10);
 		const START_HEARTBEAT_FINAL_PERIOD: Permill = Permill::from_percent(80);
+
+		sp_runtime::print("random_choice");
 
 		// this should give us a residual probability of 1/SESSION_LENGTH of sending an heartbeat,
 		// i.e. all heartbeats spread uniformly, over most of the session. as the session progresses
@@ -605,6 +607,8 @@ impl<T: Config> Pallet<T> {
 			random <= threshold
 		};
 
+		sp_runtime::print("send_heartbeats should_heartbeat");
+
 		let should_heartbeat = if let (Some(progress), _) =
 			T::NextSessionRotation::estimate_current_session_progress(block_number)
 		{
@@ -623,9 +627,13 @@ impl<T: Config> Pallet<T> {
 			block_number >= heartbeat_after
 		};
 
+		sp_runtime::print("send_heartbeats should_heartbeat");
+
 		if !should_heartbeat {
 			return Err(OffchainErr::TooEarly)
 		}
+
+		sp_runtime::print("send_heartbeats ValidatorSet::session_index");
 
 		let session_index = T::ValidatorSet::session_index();
 		let validators_len = Keys::<T>::decode_len().unwrap_or_default() as u32;
