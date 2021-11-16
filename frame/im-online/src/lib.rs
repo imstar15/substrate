@@ -583,6 +583,7 @@ impl<T: Config> Pallet<T> {
 	pub(crate) fn send_heartbeats(
 		block_number: T::BlockNumber,
 	) -> OffchainResult<T, impl Iterator<Item = OffchainResult<T, ()>>> {
+		sp_runtime::print("send_heartbeats 11111111111");
 		const START_HEARTBEAT_RANDOM_PERIOD: Permill = Permill::from_percent(10);
 		const START_HEARTBEAT_FINAL_PERIOD: Permill = Permill::from_percent(80);
 
