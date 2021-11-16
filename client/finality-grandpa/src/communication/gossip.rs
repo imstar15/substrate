@@ -896,6 +896,7 @@ impl<Block: BlockT> Inner<Block> {
 				"afg.bad_msg_signature";
 				"signature" => ?full.message.id,
 			);
+			log::info!("Action::Discard(cost::UNKNOWN_VOTER)");
 			return Action::Discard(cost::UNKNOWN_VOTER)
 		}
 
@@ -917,6 +918,7 @@ impl<Block: BlockT> Inner<Block> {
 		}
 
 		let topic = super::round_topic::<Block>(full.round.0, full.set_id.0);
+		log::info!("Action::Keep(topic, benefit::ROUND_MESSAGE)");
 		Action::Keep(topic, benefit::ROUND_MESSAGE)
 	}
 
