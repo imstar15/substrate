@@ -122,6 +122,7 @@ pub mod pallet {
 	#[pallet::hooks]
 	impl<T: Config> Hooks<BlockNumberFor<T>> for Pallet<T> {
 		fn on_finalize(block_number: T::BlockNumber) {
+			log::info!("grandpa::on_finalize");
 			// check for scheduled pending authority set changes
 			if let Some(pending_change) = <PendingChange<T>>::get() {
 				// emit signal if we're at the block that scheduled the change
@@ -193,6 +194,7 @@ pub mod pallet {
 			equivocation_proof: Box<EquivocationProof<T::Hash, T::BlockNumber>>,
 			key_owner_proof: T::KeyOwnerProof,
 		) -> DispatchResultWithPostInfo {
+			log::info!("grandpa::report_equivocation");
 			let reporter = ensure_signed(origin)?;
 
 			Self::do_report_equivocation(Some(reporter), *equivocation_proof, key_owner_proof)
@@ -213,6 +215,7 @@ pub mod pallet {
 			equivocation_proof: Box<EquivocationProof<T::Hash, T::BlockNumber>>,
 			key_owner_proof: T::KeyOwnerProof,
 		) -> DispatchResultWithPostInfo {
+			log::info!("grandpa::report_equivocation_unsigned");
 			ensure_none(origin)?;
 
 			Self::do_report_equivocation(
@@ -235,6 +238,7 @@ pub mod pallet {
 			delay: T::BlockNumber,
 			best_finalized_block_number: T::BlockNumber,
 		) -> DispatchResultWithPostInfo {
+			log::info!("grandpa::note_stalled");
 			ensure_root(origin)?;
 
 			Ok(Self::on_stalled(delay, best_finalized_block_number).into())
@@ -398,17 +402,20 @@ pub enum StoredState<N> {
 impl<T: Config> Pallet<T> {
 	/// Get the current set of authorities, along with their respective weights.
 	pub fn grandpa_authorities() -> AuthorityList {
+		log::info!("grandpa::grandpa_authorities");
 		storage::unhashed::get_or_default::<VersionedAuthorityList>(GRANDPA_AUTHORITIES_KEY).into()
 	}
 
 	/// Set the current set of authorities, along with their respective weights.
 	fn set_grandpa_authorities(authorities: &AuthorityList) {
+		log::info!("grandpa::set_grandpa_authorities");
 		storage::unhashed::put(GRANDPA_AUTHORITIES_KEY, &VersionedAuthorityList::from(authorities));
 	}
 
 	/// Schedule GRANDPA to pause starting in the given number of blocks.
 	/// Cannot be done when already paused.
 	pub fn schedule_pause(in_blocks: T::BlockNumber) -> DispatchResult {
+		log::info!("grandpa::schedule_pause");
 		if let StoredState::Live = <State<T>>::get() {
 			let scheduled_at = <frame_system::Pallet<T>>::block_number();
 			<State<T>>::put(StoredState::PendingPause { delay: in_blocks, scheduled_at });
@@ -421,6 +428,7 @@ impl<T: Config> Pallet<T> {
 
 	/// Schedule a resume of GRANDPA after pausing.
 	pub fn schedule_resume(in_blocks: T::BlockNumber) -> DispatchResult {
+		log::info!("grandpa::schedule_resume");
 		if let StoredState::Paused = <State<T>>::get() {
 			let scheduled_at = <frame_system::Pallet<T>>::block_number();
 			<State<T>>::put(StoredState::PendingResume { delay: in_blocks, scheduled_at });
@@ -450,6 +458,7 @@ impl<T: Config> Pallet<T> {
 		in_blocks: T::BlockNumber,
 		forced: Option<T::BlockNumber>,
 	) -> DispatchResult {
+		log::info!("grandpa::schedule_change");
 		if !<PendingChange<T>>::exists() {
 			let scheduled_at = <frame_system::Pallet<T>>::block_number();
 
@@ -478,6 +487,7 @@ impl<T: Config> Pallet<T> {
 
 	/// Deposit one of this module's logs.
 	fn deposit_log(log: ConsensusLog<T::BlockNumber>) {
+		log::info!("grandpa::deposit_log");
 		let log: DigestItem<T::Hash> = DigestItem::Consensus(GRANDPA_ENGINE_ID, log.encode());
 		<frame_system::Pallet<T>>::deposit_log(log.into());
 	}
@@ -485,6 +495,7 @@ impl<T: Config> Pallet<T> {
 	// Perform module initialization, abstracted so that it can be called either through genesis
 	// config builder or through `on_genesis_session`.
 	fn initialize(authorities: &AuthorityList) {
+		log::info!("grandpa::initialize");
 		if !authorities.is_empty() {
 			assert!(Self::grandpa_authorities().is_empty(), "Authorities are already initialized!");
 			Self::set_grandpa_authorities(authorities);
@@ -501,6 +512,7 @@ impl<T: Config> Pallet<T> {
 		equivocation_proof: EquivocationProof<T::Hash, T::BlockNumber>,
 		key_owner_proof: T::KeyOwnerProof,
 	) -> DispatchResultWithPostInfo {
+		log::info!("grandpa::do_report_equivocation");
 		// we check the equivocation within the context of its set id (and
 		// associated session) and round. we also need to know the validator
 		// set count when the offence since it is required to calculate the
@@ -572,6 +584,7 @@ impl<T: Config> Pallet<T> {
 		equivocation_proof: EquivocationProof<T::Hash, T::BlockNumber>,
 		key_owner_proof: T::KeyOwnerProof,
 	) -> Option<()> {
+		log::info!("grandpa::submit_unsigned_equivocation_report");
 		T::HandleEquivocation::submit_unsigned_equivocation_report(
 			equivocation_proof,
 			key_owner_proof,
@@ -580,6 +593,7 @@ impl<T: Config> Pallet<T> {
 	}
 
 	fn on_stalled(further_wait: T::BlockNumber, median: T::BlockNumber) {
+		log::info!("grandpa::on_stalled");
 		// when we record old authority sets we could try to figure out _who_
 		// failed. until then, we can't meaningfully guard against
 		// `next == last` the way that normal session changes do.
@@ -601,6 +615,7 @@ where
 	where
 		I: Iterator<Item = (&'a T::AccountId, AuthorityId)>,
 	{
+		log::info!("grandpa::on_genesis_session");
 		let authorities = validators.map(|(_, k)| (k, 1)).collect::<Vec<_>>();
 		Self::initialize(&authorities);
 	}
@@ -612,6 +627,7 @@ where
 		// Always issue a change if `session` says that the validators have changed.
 		// Even if their session keys are the same as before, the underlying economic
 		// identities have changed.
+		log::info!("grandpa::on_new_session");
 		let current_set_id = if changed || <Stalled<T>>::exists() {
 			let next_authorities = validators.map(|(_, k)| (k, 1)).collect::<Vec<_>>();
 
@@ -645,6 +661,7 @@ where
 	}
 
 	fn on_disabled(i: usize) {
+		log::info!("grandpa::on_disabled");
 		Self::deposit_log(ConsensusLog::OnDisabled(i as u64))
 	}
 }
