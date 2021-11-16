@@ -1531,9 +1531,11 @@ impl<Block: BlockT> sc_network_gossip::Validator<Block> for GossipValidator<Bloc
 			Action::Keep(topic, cb) => {
 				self.report(who.clone(), cb);
 				context.broadcast_message(topic, data.to_vec(), false);
+				log::info!("sc_network_gossip::ValidationResult::ProcessAndKeep, topic: {:?}, who: {}", topic, who);
 				sc_network_gossip::ValidationResult::ProcessAndKeep(topic)
 			},
 			Action::ProcessAndDiscard(topic, cb) => {
+				log::info!("sc_network_gossip::ValidationResult::ProcessAndDiscard");
 				self.report(who.clone(), cb);
 				sc_network_gossip::ValidationResult::ProcessAndDiscard(topic)
 			},
