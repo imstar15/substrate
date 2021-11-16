@@ -575,8 +575,12 @@ impl<T: Config> Pallet<T> {
 
 	/// Note that the given authority has authored a block in the current session.
 	fn note_authorship(author: ValidatorId<T>) {
-		sp_runtime::print("note_authorship, author: ");
-		sp_runtime::print(author);
+		log::info!(
+			target: "runtime::im-online",
+			"note_authorship: {:?}",
+			authority
+		);
+
 		let current_session = T::ValidatorSet::session_index();
 
 		AuthoredBlocks::<T>::mutate(&current_session, author, |authored| *authored += 1);
