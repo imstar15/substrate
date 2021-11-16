@@ -648,6 +648,7 @@ impl<T: Config> Pallet<T> {
 		block_number: T::BlockNumber,
 		validators_len: u32,
 	) -> OffchainResult<T, ()> {
+		sp_runtime::print("send_single_heartbeat");
 		// A helper function to prepare heartbeat call.
 		let prepare_heartbeat = || -> OffchainResult<T, Call<T>> {
 			let network_state =
