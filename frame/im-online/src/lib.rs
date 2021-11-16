@@ -407,6 +407,14 @@ pub mod pallet {
 				Self::deposit_event(Event::<T>::HeartbeatReceived(public.clone()));
 
 				let network_state = heartbeat.network_state.encode();
+				sp_runtime::print("ReceivedHeartbeats::<T>::insert");
+				sp_runtime::print(current_session);
+				sp_runtime::print(heartbeat.authority_index);
+				log::debug!(
+					target: "runtime::im-online",
+					"network_state: {:?}",
+					network_state,
+				);
 				ReceivedHeartbeats::<T>::insert(
 					&current_session,
 					&heartbeat.authority_index,
