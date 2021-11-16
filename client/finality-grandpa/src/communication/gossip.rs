@@ -104,7 +104,7 @@ use std::{
 	time::Duration,
 };
 use wasm_timer::Instant;
-use backtrace::Backtrace;
+// use backtrace::Backtrace;
 
 const REBROADCAST_AFTER: Duration = Duration::from_secs(60 * 5);
 const CATCH_UP_REQUEST_TIMEOUT: Duration = Duration::from_secs(45);
@@ -879,8 +879,8 @@ impl<Block: BlockT> Inner<Block> {
 		full: &VoteMessage<Block>,
 	) -> Action<Block::Hash> {
 		log::info!("validate_round_message -> check_message_signature");
-		let bt = Backtrace::new();
-		log::info!("{:?}", bt);
+		// let bt = Backtrace::new();
+		// log::info!("{:?}", bt);
 		match self.consider_vote(full.round, full.set_id) {
 			Consider::RejectFuture => return Action::Discard(Misbehavior::FutureMessage.cost()),
 			Consider::RejectOutOfScope =>
