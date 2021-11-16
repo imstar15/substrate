@@ -484,7 +484,7 @@ impl<B: BlockT, N: Network<B>> Future for NetworkBridge<B, N> {
 			}
 		}
 
-		log::info!("gossip_engine 2!!!!!!!!!");
+		log::info!("gossip_engine 3!!!!!!!!!");
 		match self.gossip_engine.lock().poll_unpin(cx) {
 			Poll::Ready(()) =>
 				return Poll::Ready(Err(Error::Network("Gossip engine future finished.".into()))),
