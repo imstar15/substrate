@@ -578,7 +578,7 @@ impl<T: Config> Pallet<T> {
 		log::info!(
 			target: "runtime::im-online",
 			"note_authorship: {:?}",
-			authority
+			author
 		);
 
 		let current_session = T::ValidatorSet::session_index();
