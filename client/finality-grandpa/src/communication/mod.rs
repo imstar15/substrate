@@ -459,6 +459,7 @@ impl<B: BlockT, N: Network<B>> Future for NetworkBridge<B, N> {
 		loop {
 			match self.neighbor_packet_worker.lock().poll_next_unpin(cx) {
 				Poll::Ready(Some((to, packet))) => {
+					log::info!("gossip_engine 1!!!!!!!!!");
 					self.gossip_engine.lock().send_message(to, packet.encode());
 				},
 				Poll::Ready(None) =>
@@ -472,6 +473,7 @@ impl<B: BlockT, N: Network<B>> Future for NetworkBridge<B, N> {
 		loop {
 			match self.gossip_validator_report_stream.lock().poll_next_unpin(cx) {
 				Poll::Ready(Some(PeerReport { who, cost_benefit })) => {
+					log::info!("gossip_engine 2!!!!!!!!!");
 					self.gossip_engine.lock().report(who, cost_benefit);
 				},
 				Poll::Ready(None) =>
@@ -482,6 +484,7 @@ impl<B: BlockT, N: Network<B>> Future for NetworkBridge<B, N> {
 			}
 		}
 
+		log::info!("gossip_engine 2!!!!!!!!!");
 		match self.gossip_engine.lock().poll_unpin(cx) {
 			Poll::Ready(()) =>
 				return Poll::Ready(Err(Error::Network("Gossip engine future finished.".into()))),
