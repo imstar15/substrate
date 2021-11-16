@@ -843,6 +843,11 @@ impl<T: Config> OneSessionHandler<T::AccountId> for Pallet<T> {
 	}
 
 	fn on_before_session_ending() {
+		log::info!(
+			target: "runtime::im-online",
+			"on_before_session_ending",
+		);
+
 		let session_index = T::ValidatorSet::session_index();
 		let keys = Keys::<T>::get();
 		let current_validators = T::ValidatorSet::validators();
