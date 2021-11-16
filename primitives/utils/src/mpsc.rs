@@ -95,7 +95,6 @@ mod inner {
 
 		/// Proxy function to mpsc::UnboundedSender
 		pub fn start_send(&mut self, msg: T) -> Result<(), SendError> {
-			log::info!("mpsc.start_send");
 			self.1.start_send(msg)
 		}
 
