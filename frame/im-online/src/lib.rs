@@ -799,8 +799,8 @@ impl<T: Config> OneSessionHandler<T::AccountId> for Pallet<T> {
 
 		log::info!(
 			target: "runtime::im-online",
-			"offenders: {:?}",
-			offenders,
+			"offenders.len(): {}",
+			offenders.len(),
 		);
 
 		if offenders.is_empty() {
