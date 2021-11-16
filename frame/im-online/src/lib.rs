@@ -396,8 +396,9 @@ pub mod pallet {
 			// we can skip doing it here again.
 			_signature: <T::AuthorityId as RuntimeAppPublic>::Signature,
 		) -> DispatchResult {
+			sp_runtime::print("im-online::heartbeat 111111");
 			ensure_none(origin)?;
-
+			sp_runtime::print("im-online::heartbeat 222222");
 			let current_session = T::ValidatorSet::session_index();
 			let exists =
 				ReceivedHeartbeats::<T>::contains_key(&current_session, &heartbeat.authority_index);
