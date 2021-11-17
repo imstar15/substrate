@@ -1104,39 +1104,46 @@ where
 	type Output = Result<(), Error>;
 
 	fn poll(mut self: Pin<&mut Self>, cx: &mut Context) -> Poll<Self::Output> {
-		log::info!("Future::poll");
+		// log::info!("Future::poll");
 		match Future::poll(Pin::new(&mut self.voter), cx) {
 			Poll::Pending => {},
 			Poll::Ready(Ok(())) => {
+				log::info!("Poll::Ready(Ok(()))");
 				// voters don't conclude naturally
 				return Poll::Ready(Err(Error::Safety(
 					"finality-grandpa inner voter has concluded.".into(),
 				)))
 			},
 			Poll::Ready(Err(CommandOrError::Error(e))) => {
+				log::info!("Poll::Ready(Err(CommandOrError::Error(e)))");
 				// return inner observer error
 				return Poll::Ready(Err(e))
 			},
 			Poll::Ready(Err(CommandOrError::VoterCommand(command))) => {
+				log::info!("Poll::Ready(Err(CommandOrError::VoterCommand(command)))");
 				// some command issued internally
 				self.handle_voter_command(command)?;
 				cx.waker().wake_by_ref();
 			},
 		}
 
+		log::info!("Stream::poll_next(Pin::new(&mut self.voter_commands_rx), cx)");
 		match Stream::poll_next(Pin::new(&mut self.voter_commands_rx), cx) {
 			Poll::Pending => {},
 			Poll::Ready(None) => {
+				log::info!("Poll::Ready(None)");
 				// the `voter_commands_rx` stream should never conclude since it's never closed.
 				return Poll::Ready(Err(Error::Safety("`voter_commands_rx` was closed.".into())))
 			},
 			Poll::Ready(Some(command)) => {
+				log::info!("Poll::Ready(Some(command))");
 				// some command issued externally
 				self.handle_voter_command(command)?;
 				cx.waker().wake_by_ref();
 			},
 		}
 
+		log::info!("Future::poll(Pin::new(&mut self.network), cx)");
 		Future::poll(Pin::new(&mut self.network), cx)
 	}
 }
