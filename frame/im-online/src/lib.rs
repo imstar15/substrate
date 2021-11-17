@@ -625,9 +625,9 @@ impl<T: Config> Pallet<T> {
 			let result = progress >= START_HEARTBEAT_FINAL_PERIOD ||
 				progress >= START_HEARTBEAT_RANDOM_PERIOD && rd_choice;
 
-			log::debug!("progress: {:?}", progress);
-			log::debug!("START_HEARTBEAT_FINAL_PERIOD: {:?}", START_HEARTBEAT_FINAL_PERIOD);
-			log::debug!("START_HEARTBEAT_RANDOM_PERIOD: {:?}", START_HEARTBEAT_RANDOM_PERIOD);
+			log::info!("progress: {:?}", progress);
+			log::info!("START_HEARTBEAT_FINAL_PERIOD: {:?}", START_HEARTBEAT_FINAL_PERIOD);
+			log::info!("START_HEARTBEAT_RANDOM_PERIOD: {:?}", START_HEARTBEAT_RANDOM_PERIOD);
 			sp_runtime::print("rd_choice: ");
 			sp_runtime::print(rd_choice);
 			sp_runtime::print("result: ");
