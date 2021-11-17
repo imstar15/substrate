@@ -41,16 +41,16 @@ impl RuntimePublic for Public {
 	type Signature = Signature;
 
 	fn all(key_type: KeyTypeId) -> crate::Vec<Self> {
-		log::debug!(
-			target: "runtime::im-online",
-			"RuntimePublic::all"
-		);
+		// log::debug!(
+		// 	target: "runtime::im-online",
+		// 	"RuntimePublic::all"
+		// );
 		let result = sp_io::crypto::sr25519_public_keys(key_type);
-		log::debug!(
-			target: "runtime::im-online",
-			"result: {:?}",
-			result
-		);
+		// log::debug!(
+		// 	target: "runtime::im-online",
+		// 	"result: {:?}",
+		// 	result
+		// );
 		result
 	}
 

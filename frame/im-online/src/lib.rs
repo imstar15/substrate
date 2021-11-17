@@ -589,11 +589,11 @@ impl<T: Config> Pallet<T> {
 	pub(crate) fn send_heartbeats(
 		block_number: T::BlockNumber,
 	) -> OffchainResult<T, impl Iterator<Item = OffchainResult<T, ()>>> {
-		sp_runtime::print("send_heartbeats");
+		// sp_runtime::print("send_heartbeats");
 		const START_HEARTBEAT_RANDOM_PERIOD: Permill = Permill::from_percent(10);
 		const START_HEARTBEAT_FINAL_PERIOD: Permill = Permill::from_percent(80);
 
-		sp_runtime::print("random_choice");
+		// sp_runtime::print("random_choice");
 
 		// this should give us a residual probability of 1/SESSION_LENGTH of sending an heartbeat,
 		// i.e. all heartbeats spread uniformly, over most of the session. as the session progresses
@@ -613,7 +613,7 @@ impl<T: Config> Pallet<T> {
 			random <= threshold
 		};
 
-		sp_runtime::print("send_heartbeats should_heartbeat");
+		// sp_runtime::print("send_heartbeats should_heartbeat");
 
 		let should_heartbeat = if let (Some(progress), _) =
 			T::NextSessionRotation::estimate_current_session_progress(block_number)
@@ -624,7 +624,7 @@ impl<T: Config> Pallet<T> {
 			// haven't sent an heartbeat yet we'll send one unconditionally. the idea is to prevent
 			// all nodes from sending the heartbeats at the same block and causing a temporary (but
 			// deterministic) spike in transactions.
-			sp_runtime::print("send_heartbeats should_heartbeat if");
+			// sp_runtime::print("send_heartbeats should_heartbeat if");
 
 			let rd_choice = random_choice(progress);
 
@@ -633,31 +633,31 @@ impl<T: Config> Pallet<T> {
 			let result = progress >= START_HEARTBEAT_FINAL_PERIOD ||
 				progress >= START_HEARTBEAT_RANDOM_PERIOD && rd_choice;
 			
-			log::info!("progress: {:?}", progress);
-			sp_runtime::print("rd_choice: ");
-			sp_runtime::print(rd_choice);
-			sp_runtime::print("result: ");
-			sp_runtime::print(result);
+			// log::info!("progress: {:?}", progress);
+			// sp_runtime::print("rd_choice: ");
+			// sp_runtime::print(rd_choice);
+			// sp_runtime::print("result: ");
+			// sp_runtime::print(result);
 		
 			result
 		} else {
-			sp_runtime::print("send_heartbeats should_heartbeat else");
+			// sp_runtime::print("send_heartbeats should_heartbeat else");
 			// otherwise we fallback to using the block number calculated at the beginning
 			// of the session that should roughly correspond to the middle of the session
 			let heartbeat_after = <HeartbeatAfter<T>>::get();
 			let result = block_number >= heartbeat_after;
-			sp_runtime::print(result);
+			// sp_runtime::print(result);
 			result
 		};
 
-		sp_runtime::print("send_heartbeats should_heartbeat");
+		// sp_runtime::print("send_heartbeats should_heartbeat");
 
 		if !should_heartbeat {
-			sp_runtime::print("send_heartbeats OffchainErr::TooEarly");
+			// sp_runtime::print("send_heartbeats OffchainErr::TooEarly");
 			return Err(OffchainErr::TooEarly)
 		}
 
-		sp_runtime::print("send_heartbeats ValidatorSet::session_index");
+		// sp_runtime::print("send_heartbeats ValidatorSet::session_index");
 
 		let session_index = T::ValidatorSet::session_index();
 		let validators_len = Keys::<T>::decode_len().unwrap_or_default() as u32;

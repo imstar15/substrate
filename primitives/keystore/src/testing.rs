@@ -78,7 +78,7 @@ impl CryptoStore for KeyStore {
 	}
 
 	async fn sr25519_public_keys(&self, id: KeyTypeId) -> Vec<sr25519::Public> {
-		log::info!(target: "runtime", "testing::sr25519_public_keys 22222 id: {:?}", id);
+		// log::info!(target: "runtime", "testing::sr25519_public_keys 22222 id: {:?}", id);
 		SyncCryptoStore::sr25519_public_keys(self, id)
 	}
 

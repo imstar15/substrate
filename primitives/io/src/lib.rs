@@ -625,7 +625,7 @@ pub trait Crypto {
 
 	/// Returns all `sr25519` public keys for the given key id from the keystore.
 	fn sr25519_public_keys(&mut self, id: KeyTypeId) -> Vec<sr25519::Public> {
-		log::info!(target: "runtime", "io::sr25519_public_keys id: {:?}", id);
+		// log::info!(target: "runtime", "io::sr25519_public_keys id: {:?}", id);
 		let keystore = &***self
 			.extension::<KeystoreExt>()
 			.expect("No `keystore` associated for the current context!");
