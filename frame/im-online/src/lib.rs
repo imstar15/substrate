@@ -639,10 +639,10 @@ impl<T: Config> Pallet<T> {
 		let session_index = T::ValidatorSet::session_index();
 		let validators_len = Keys::<T>::decode_len().unwrap_or_default() as u32;
 
-		log::info!(
-			target: "runtime::im-online",
-			"send_heartbeats Self::local_authority_keys().len(): {}", Self::local_authority_keys().len()
-		);
+		// log::info!(
+		// 	target: "runtime::im-online",
+		// 	"send_heartbeats Self::local_authority_keys().len(): {}", Self::local_authority_keys().len()
+		// );
 
 		Ok(Self::local_authority_keys().map(move |(authority_index, key)| {
 			Self::send_single_heartbeat(
@@ -718,6 +718,11 @@ impl<T: Config> Pallet<T> {
 		let mut local_keys = T::AuthorityId::all();
 
 		local_keys.sort();
+		
+		log::info!(
+			target: "runtime::im-online",
+			"local_authority_keys local_keys.len(): {}", local_keys.len()
+		);
 
 		authorities.into_iter().enumerate().filter_map(move |(index, authority)| {
 			local_keys
