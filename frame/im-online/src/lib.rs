@@ -718,6 +718,11 @@ impl<T: Config> Pallet<T> {
 		//          heartbeats.
 		let authorities = Keys::<T>::get();
 
+		log::info!(
+			target: "runtime::im-online",
+			"local_authority_keys authorities.len(): {}", authorities.len()
+		);
+
 		// local keystore
 		//
 		// All `ImOnline` public (+private) keys currently in the local keystore.
