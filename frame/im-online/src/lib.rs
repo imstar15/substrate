@@ -550,17 +550,17 @@ impl<T: Config> Pallet<T> {
 		let is_contains_key = ReceivedHeartbeats::<T>::contains_key(&current_session, &authority_index);
 		let number_of_authored_blocks = AuthoredBlocks::<T>::get(&current_session, authority);
 
-		sp_runtime::print("is_online_aux");
-		sp_runtime::print(authority_index);
+		// sp_runtime::print("is_online_aux");
+		// sp_runtime::print(authority_index);
 		// sp_runtime::print(authority);
-		log::info!(
-			target: "runtime::im-online",
-			"authority: {:?}",
-			authority
-		);
-		sp_runtime::print(is_contains_key);
-		sp_runtime::print(number_of_authored_blocks);
-		sp_runtime::print("is_online_aux ===============");
+		// log::info!(
+		// 	target: "runtime::im-online",
+		// 	"authority: {:?}",
+		// 	authority
+		// );
+		// sp_runtime::print(is_contains_key);
+		// sp_runtime::print(number_of_authored_blocks);
+		// sp_runtime::print("is_online_aux ===============");
 
 		ReceivedHeartbeats::<T>::contains_key(&current_session, &authority_index) ||
 			AuthoredBlocks::<T>::get(&current_session, authority) != 0
@@ -575,11 +575,11 @@ impl<T: Config> Pallet<T> {
 
 	/// Note that the given authority has authored a block in the current session.
 	fn note_authorship(author: ValidatorId<T>) {
-		log::info!(
-			target: "runtime::im-online",
-			"note_authorship: {:?}",
-			author
-		);
+		// log::info!(
+		// 	target: "runtime::im-online",
+		// 	"note_authorship: {:?}",
+		// 	author
+		// );
 
 		let current_session = T::ValidatorSet::session_index();
 
@@ -730,10 +730,10 @@ impl<T: Config> Pallet<T> {
 		//          heartbeats.
 		let authorities = Keys::<T>::get();
 
-		log::info!(
-			target: "runtime::im-online",
-			"local_authority_keys authorities.len(): {}", authorities.len()
-		);
+		// log::info!(
+		// 	target: "runtime::im-online",
+		// 	"local_authority_keys authorities.len(): {}", authorities.len()
+		// );
 
 		// local keystore
 		//
@@ -742,10 +742,10 @@ impl<T: Config> Pallet<T> {
 
 		local_keys.sort();
 		
-		log::info!(
-			target: "runtime::im-online",
-			"local_authority_keys local_keys.len(): {}", local_keys.len()
-		);
+		// log::info!(
+		// 	target: "runtime::im-online",
+		// 	"local_authority_keys local_keys.len(): {}", local_keys.len()
+		// );
 
 		authorities.into_iter().enumerate().filter_map(move |(index, authority)| {
 			local_keys
@@ -844,10 +844,10 @@ impl<T: Config> OneSessionHandler<T::AccountId> for Pallet<T> {
 	}
 
 	fn on_before_session_ending() {
-		log::info!(
-			target: "runtime::im-online",
-			"on_before_session_ending",
-		);
+		// log::info!(
+		// 	target: "runtime::im-online",
+		// 	"on_before_session_ending",
+		// );
 
 		let session_index = T::ValidatorSet::session_index();
 		let keys = Keys::<T>::get();
@@ -870,11 +870,11 @@ impl<T: Config> OneSessionHandler<T::AccountId> for Pallet<T> {
 		ReceivedHeartbeats::<T>::remove_prefix(&T::ValidatorSet::session_index(), None);
 		AuthoredBlocks::<T>::remove_prefix(&T::ValidatorSet::session_index(), None);
 
-		log::info!(
-			target: "runtime::im-online",
-			"offenders.len(): {}",
-			offenders.len(),
-		);
+		// log::info!(
+		// 	target: "runtime::im-online",
+		// 	"offenders.len(): {}",
+		// 	offenders.len(),
+		// );
 
 		if offenders.is_empty() {
 			Self::deposit_event(Event::<T>::AllGood);
