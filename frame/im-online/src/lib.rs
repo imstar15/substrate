@@ -652,20 +652,15 @@ impl<T: Config> Pallet<T> {
 
 		sp_runtime::print("send_heartbeats should_heartbeat");
 
-		// if !should_heartbeat {
-		// 	sp_runtime::print("send_heartbeats OffchainErr::TooEarly");
-		// 	return Err(OffchainErr::TooEarly)
-		// }
+		if !should_heartbeat {
+			sp_runtime::print("send_heartbeats OffchainErr::TooEarly");
+			return Err(OffchainErr::TooEarly)
+		}
 
 		sp_runtime::print("send_heartbeats ValidatorSet::session_index");
 
 		let session_index = T::ValidatorSet::session_index();
 		let validators_len = Keys::<T>::decode_len().unwrap_or_default() as u32;
-
-		// log::info!(
-		// 	target: "runtime::im-online",
-		// 	"send_heartbeats Self::local_authority_keys().len(): {}", Self::local_authority_keys().len()
-		// );
 
 		Ok(Self::local_authority_keys().map(move |(authority_index, key)| {
 			Self::send_single_heartbeat(

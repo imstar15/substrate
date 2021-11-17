@@ -216,6 +216,7 @@ pub struct SharedVoterState {
 impl SharedVoterState {
 	/// Create a new empty `SharedVoterState` instance.
 	pub fn empty() -> Self {
+		log::info!("SharedVoterState::empty");
 		Self { inner: Arc::new(RwLock::new(None)) }
 	}
 
@@ -223,6 +224,7 @@ impl SharedVoterState {
 		&self,
 		voter_state: Box<dyn voter::VoterState<AuthorityId> + Sync + Send>,
 	) -> Option<()> {
+		log::info!("SharedVoterState::reset");
 		let mut shared_voter_state = self.inner.try_write_for(Duration::from_secs(1))?;
 
 		*shared_voter_state = Some(voter_state);
@@ -231,12 +233,14 @@ impl SharedVoterState {
 
 	/// Get the inner `VoterState` instance.
 	pub fn voter_state(&self) -> Option<voter::report::VoterState<AuthorityId>> {
+		log::info!("SharedVoterState::voter_state");
 		self.inner.read().as_ref().map(|vs| vs.get())
 	}
 }
 
 impl Clone for SharedVoterState {
 	fn clone(&self) -> Self {
+		log::info!("SharedVoterState::clone");
 		SharedVoterState { inner: self.inner.clone() }
 	}
 }
@@ -267,6 +271,7 @@ pub struct Config {
 
 impl Config {
 	fn name(&self) -> &str {
+		log::info!("Config::name");
 		self.name.as_ref().map(|s| s.as_str()).unwrap_or("<unknown>")
 	}
 }
@@ -294,12 +299,14 @@ pub enum Error {
 
 impl From<GrandpaError> for Error {
 	fn from(e: GrandpaError) -> Self {
+		log::info!("GrandpaError::from");
 		Error::Grandpa(e)
 	}
 }
 
 impl From<ClientError> for Error {
 	fn from(e: ClientError) -> Self {
+		log::info!("ClientError::from");
 		Error::Client(e)
 	}
 }
@@ -318,6 +325,7 @@ where
 	NumberFor<Block>: BlockNumberOps,
 {
 	fn block_number(&self, hash: Block::Hash) -> Result<Option<NumberFor<Block>>, Error> {
+		log::info!("BlockStatus::block_number");
 		self.block_number_from_id(&BlockId::Hash(hash))
 			.map_err(|e| Error::Blockchain(format!("{:?}", e)))
 	}
@@ -387,6 +395,7 @@ where
 		hash: Block::Hash,
 		number: NumberFor<Block>,
 	) {
+		log::info!("BlockSyncRequester::set_sync_fork_request");
 		NetworkBridge::set_sync_fork_request(self, peers, hash, number)
 	}
 }
@@ -411,6 +420,7 @@ pub(crate) enum VoterCommand<H, N> {
 
 impl<H, N> fmt::Display for VoterCommand<H, N> {
 	fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+		log::info!("VoterCommand::fmt");
 		match *self {
 			VoterCommand::Pause(ref reason) => write!(f, "Pausing voter: {}", reason),
 			VoterCommand::ChangeAuthorities(_) => write!(f, "Changing authorities"),
@@ -429,24 +439,28 @@ pub(crate) enum CommandOrError<H, N> {
 
 impl<H, N> From<Error> for CommandOrError<H, N> {
 	fn from(e: Error) -> Self {
+		log::info!("CommandOrError::from");
 		CommandOrError::Error(e)
 	}
 }
 
 impl<H, N> From<ClientError> for CommandOrError<H, N> {
 	fn from(e: ClientError) -> Self {
+		log::info!("ClientError::from");
 		CommandOrError::Error(Error::Client(e))
 	}
 }
 
 impl<H, N> From<finality_grandpa::Error> for CommandOrError<H, N> {
 	fn from(e: finality_grandpa::Error) -> Self {
+		log::info!("finality_grandpa::from");
 		CommandOrError::Error(Error::from(e))
 	}
 }
 
 impl<H, N> From<VoterCommand<H, N>> for CommandOrError<H, N> {
 	fn from(e: VoterCommand<H, N>) -> Self {
+		log::info!("VoterCommand::from");
 		CommandOrError::VoterCommand(e)
 	}
 }
@@ -455,6 +469,7 @@ impl<H: fmt::Debug, N: fmt::Debug> ::std::error::Error for CommandOrError<H, N> 
 
 impl<H, N> fmt::Display for CommandOrError<H, N> {
 	fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+		log::info!("CommandOrError::from");
 		match *self {
 			CommandOrError::Error(ref e) => write!(f, "{:?}", e),
 			CommandOrError::VoterCommand(ref cmd) => write!(f, "{}", cmd),
@@ -476,11 +491,13 @@ pub struct LinkHalf<Block: BlockT, C, SC> {
 impl<Block: BlockT, C, SC> LinkHalf<Block, C, SC> {
 	/// Get the shared authority set.
 	pub fn shared_authority_set(&self) -> &SharedAuthoritySet<Block::Hash, NumberFor<Block>> {
+		log::info!("LinkHalf::shared_authority_set");
 		&self.persistent_data.authority_set
 	}
 
 	/// Get the receiving end of justification notifications.
 	pub fn justification_stream(&self) -> GrandpaJustificationStream<Block> {
+		log::info!("LinkHalf::justification_stream");
 		self.justification_stream.clone()
 	}
 }
@@ -497,6 +514,7 @@ where
 	E: CallExecutor<Block>,
 {
 	fn get(&self) -> Result<AuthorityList, ClientError> {
+		log::info!("GenesisAuthoritySetProvider::get");
 		// This implementation uses the Grandpa runtime API instead of reading directly from the
 		// `GRANDPA_AUTHORITIES_KEY` as the data may have been migrated since the genesis block of
 		// the chain, whereas the runtime API is backwards compatible.
@@ -532,6 +550,7 @@ where
 	BE: Backend<Block> + 'static,
 	Client: ClientForGrandpa<Block, BE> + 'static,
 {
+	log::info!("GenesisAuthoritySetProvider::block_import");
 	block_import_with_authority_set_hard_forks(
 		client,
 		genesis_authorities_provider,
@@ -558,6 +577,7 @@ where
 	BE: Backend<Block> + 'static,
 	Client: ClientForGrandpa<Block, BE> + 'static,
 {
+	log::info!("GenesisAuthoritySetProvider::block_import_with_authority_set_hard_forks");
 	let chain_info = client.info();
 	let genesis_hash = chain_info.genesis_hash;
 
@@ -645,6 +665,7 @@ where
 	N: NetworkT<Block>,
 	NumberFor<Block>: BlockNumberOps,
 {
+	log::info!("global_communication");
 	let is_voter = local_authority_id(voters, keystore).is_some();
 
 	// verification stream
@@ -692,6 +713,7 @@ pub struct GrandpaParams<Block: BlockT, C, N, SC, VR> {
 /// Returns the configuration value to put in
 /// [`sc_network::config::NetworkConfiguration::extra_sets`].
 pub fn grandpa_peers_set_config() -> sc_network::config::NonDefaultSetConfig {
+	log::info!("grandpa_peers_set_config");
 	sc_network::config::NonDefaultSetConfig {
 		notifications_protocol: communication::GRANDPA_PROTOCOL_NAME.into(),
 		fallback_names: Vec::new(),
@@ -722,6 +744,7 @@ where
 	C: ClientForGrandpa<Block, BE> + 'static,
 	C::Api: GrandpaApi<Block>,
 {
+	log::info!("run_grandpa_voter");
 	let GrandpaParams {
 		mut config,
 		link,
@@ -825,6 +848,7 @@ struct Metrics {
 
 impl Metrics {
 	fn register(registry: &Registry) -> Result<Self, PrometheusError> {
+		log::info!("Metrics::register");
 		Ok(Metrics {
 			environment: environment::Metrics::register(registry)?,
 			until_imported: until_imported::Metrics::register(registry)?,
@@ -871,6 +895,7 @@ where
 		justification_sender: GrandpaJustificationSender<Block>,
 		telemetry: Option<TelemetryHandle>,
 	) -> Self {
+		log::info!("VoterWork::new");
 		let metrics = match prometheus_registry.as_ref().map(Metrics::register) {
 			Some(Ok(metrics)) => Some(metrics),
 			Some(Err(e)) => {
@@ -916,6 +941,7 @@ where
 	/// state. This method should be called when we know that the authority set
 	/// has changed (e.g. as signalled by a voter command).
 	fn rebuild_voter(&mut self) {
+		log::info!("VoterWork::rebuild_voter");
 		debug!(target: "afg", "{}: Starting new voter with set ID {}", self.env.config.name(), self.env.set_id);
 
 		let authority_id = local_authority_id(&self.env.voters, self.env.config.keystore.as_ref())
@@ -992,6 +1018,7 @@ where
 		&mut self,
 		command: VoterCommand<Block::Hash, NumberFor<Block>>,
 	) -> Result<(), Error> {
+		log::info!("VoterWork::handle_voter_command");
 		match command {
 			VoterCommand::ChangeAuthorities(new) => {
 				let voters: Vec<String> =
@@ -1077,6 +1104,7 @@ where
 	type Output = Result<(), Error>;
 
 	fn poll(mut self: Pin<&mut Self>, cx: &mut Context) -> Poll<Self::Output> {
+		log::info!("Future::poll");
 		match Future::poll(Pin::new(&mut self.voter), cx) {
 			Poll::Pending => {},
 			Poll::Ready(Ok(())) => {
@@ -1120,6 +1148,7 @@ fn local_authority_id(
 	voters: &VoterSet<AuthorityId>,
 	keystore: Option<&SyncCryptoStorePtr>,
 ) -> Option<AuthorityId> {
+	log::info!("Future::local_authority_id");
 	keystore.and_then(|keystore| {
 		voters
 			.iter()

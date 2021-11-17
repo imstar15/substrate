@@ -136,6 +136,7 @@ pub enum ConsensusLog<N: Codec> {
 impl<N: Codec> ConsensusLog<N> {
 	/// Try to cast the log entry as a contained signal.
 	pub fn try_into_change(self) -> Option<ScheduledChange<N>> {
+		log::info!("finality-grandpa::try_into_change");
 		match self {
 			ConsensusLog::ScheduledChange(change) => Some(change),
 			_ => None,
@@ -144,6 +145,7 @@ impl<N: Codec> ConsensusLog<N> {
 
 	/// Try to cast the log entry as a contained forced signal.
 	pub fn try_into_forced_change(self) -> Option<(N, ScheduledChange<N>)> {
+		log::info!("finality-grandpa::try_into_forced_change");
 		match self {
 			ConsensusLog::ForcedChange(median, change) => Some((median, change)),
 			_ => None,
@@ -152,6 +154,7 @@ impl<N: Codec> ConsensusLog<N> {
 
 	/// Try to cast the log entry as a contained pause signal.
 	pub fn try_into_pause(self) -> Option<N> {
+		log::info!("finality-grandpa::try_into_pause");
 		match self {
 			ConsensusLog::Pause(delay) => Some(delay),
 			_ => None,
@@ -160,6 +163,7 @@ impl<N: Codec> ConsensusLog<N> {
 
 	/// Try to cast the log entry as a contained resume signal.
 	pub fn try_into_resume(self) -> Option<N> {
+		log::info!("finality-grandpa::try_into_resume");
 		match self {
 			ConsensusLog::Resume(delay) => Some(delay),
 			_ => None,
@@ -181,16 +185,19 @@ impl<H, N> EquivocationProof<H, N> {
 	/// Create a new `EquivocationProof` for the given set id and using the
 	/// given equivocation as proof.
 	pub fn new(set_id: SetId, equivocation: Equivocation<H, N>) -> Self {
+		log::info!("finality-grandpa::new");
 		EquivocationProof { set_id, equivocation }
 	}
 
 	/// Returns the set id at which the equivocation occurred.
 	pub fn set_id(&self) -> SetId {
+		log::info!("finality-grandpa::set_id");
 		self.set_id
 	}
 
 	/// Returns the round number at which the equivocation occurred.
 	pub fn round(&self) -> RoundNumber {
+		log::info!("finality-grandpa::round");
 		match self.equivocation {
 			Equivocation::Prevote(ref equivocation) => equivocation.round_number,
 			Equivocation::Precommit(ref equivocation) => equivocation.round_number,
@@ -199,6 +206,7 @@ impl<H, N> EquivocationProof<H, N> {
 
 	/// Returns the authority id of the equivocator.
 	pub fn offender(&self) -> &AuthorityId {
+		log::info!("finality-grandpa::offender");
 		self.equivocation.offender()
 	}
 }
@@ -223,6 +231,7 @@ impl<H, N> From<grandpa::Equivocation<AuthorityId, grandpa::Prevote<H, N>, Autho
 			AuthoritySignature,
 		>,
 	) -> Self {
+		log::info!("finality-grandpa::from");
 		Equivocation::Prevote(equivocation)
 	}
 }
@@ -237,6 +246,7 @@ impl<H, N> From<grandpa::Equivocation<AuthorityId, grandpa::Precommit<H, N>, Aut
 			AuthoritySignature,
 		>,
 	) -> Self {
+		log::info!("finality-grandpa::Precommit::from");
 		Equivocation::Precommit(equivocation)
 	}
 }
@@ -244,6 +254,7 @@ impl<H, N> From<grandpa::Equivocation<AuthorityId, grandpa::Precommit<H, N>, Aut
 impl<H, N> Equivocation<H, N> {
 	/// Returns the authority id of the equivocator.
 	pub fn offender(&self) -> &AuthorityId {
+		log::info!("finality-grandpa::Equivocation::offender");
 		match self {
 			Equivocation::Prevote(ref equivocation) => &equivocation.identity,
 			Equivocation::Precommit(ref equivocation) => &equivocation.identity,
@@ -252,6 +263,7 @@ impl<H, N> Equivocation<H, N> {
 
 	/// Returns the round number when the equivocation happened.
 	pub fn round_number(&self) -> RoundNumber {
+		log::info!("finality-grandpa::Equivocation::round_number");
 		match self {
 			Equivocation::Prevote(ref equivocation) => equivocation.round_number,
 			Equivocation::Precommit(ref equivocation) => equivocation.round_number,
@@ -266,6 +278,7 @@ where
 	H: Clone + Encode + PartialEq,
 	N: Clone + Encode + PartialEq,
 {
+	log::info!("finality-grandpa::check_equivocation_proof");
 	// NOTE: the bare `Prevote` and `Precommit` types don't share any trait,
 	// this is implemented as a macro to avoid duplication.
 	macro_rules! check {
@@ -310,6 +323,7 @@ where
 
 /// Encode round message localized to a given round and set id.
 pub fn localized_payload<E: Encode>(round: RoundNumber, set_id: SetId, message: &E) -> Vec<u8> {
+	log::info!("finality-grandpa::localized_payload");
 	let mut buf = Vec::new();
 	localized_payload_with_buffer(round, set_id, message, &mut buf);
 	buf
@@ -324,6 +338,7 @@ pub fn localized_payload_with_buffer<E: Encode>(
 	message: &E,
 	buf: &mut Vec<u8>,
 ) {
+	log::info!("finality-grandpa::localized_payload_with_buffer");
 	buf.clear();
 	(message, round, set_id).encode_to(buf)
 }
@@ -341,6 +356,7 @@ where
 	H: Encode,
 	N: Encode,
 {
+	log::info!("finality-grandpa::check_message_signature");
 	check_message_signature_with_buffer(message, id, signature, round, set_id, &mut Vec::new())
 }
 
@@ -360,6 +376,7 @@ where
 	H: Encode,
 	N: Encode,
 {
+	log::info!("finality-grandpa::check_message_signature_with_buffer");
 	use sp_application_crypto::RuntimeAppPublic;
 
 	localized_payload_with_buffer(round, set_id, message, buf);
@@ -387,6 +404,7 @@ where
 	H: Encode,
 	N: Encode,
 {
+	log::info!("finality-grandpa::sign_message");
 	use sp_application_crypto::AppKey;
 	use sp_core::crypto::Public;
 	use sp_std::convert::TryInto;
@@ -424,34 +442,40 @@ pub struct VersionedAuthorityList<'a>(Cow<'a, AuthorityList>);
 
 impl<'a> From<AuthorityList> for VersionedAuthorityList<'a> {
 	fn from(authorities: AuthorityList) -> Self {
+		log::info!("finality-grandpa::VersionedAuthorityList::from");
 		VersionedAuthorityList(Cow::Owned(authorities))
 	}
 }
 
 impl<'a> From<&'a AuthorityList> for VersionedAuthorityList<'a> {
 	fn from(authorities: &'a AuthorityList) -> Self {
+		log::info!("finality-grandpa::VersionedAuthorityList::from2");
 		VersionedAuthorityList(Cow::Borrowed(authorities))
 	}
 }
 
 impl<'a> Into<AuthorityList> for VersionedAuthorityList<'a> {
 	fn into(self) -> AuthorityList {
+		log::info!("finality-grandpa::VersionedAuthorityList::into");
 		self.0.into_owned()
 	}
 }
 
 impl<'a> Encode for VersionedAuthorityList<'a> {
 	fn size_hint(&self) -> usize {
+		log::info!("finality-grandpa::size_hint");
 		(AUTHORITIES_VERSION, self.0.as_ref()).size_hint()
 	}
 
 	fn using_encoded<R, F: FnOnce(&[u8]) -> R>(&self, f: F) -> R {
+		log::info!("finality-grandpa::using_encoded");
 		(AUTHORITIES_VERSION, self.0.as_ref()).using_encoded(f)
 	}
 }
 
 impl<'a> Decode for VersionedAuthorityList<'a> {
 	fn decode<I: Input>(value: &mut I) -> Result<Self, codec::Error> {
+		log::info!("finality-grandpa::decode");
 		let (version, authorities): (u8, AuthorityList) = Decode::decode(value)?;
 		if version != AUTHORITIES_VERSION {
 			return Err("unknown Grandpa authorities version".into())
@@ -473,12 +497,14 @@ impl OpaqueKeyOwnershipProof {
 	/// Create a new `OpaqueKeyOwnershipProof` using the given encoded
 	/// representation.
 	pub fn new(inner: Vec<u8>) -> OpaqueKeyOwnershipProof {
+		log::info!("finality-grandpa::OpaqueKeyOwnershipProof::new");
 		OpaqueKeyOwnershipProof(inner)
 	}
 
 	/// Try to decode this `OpaqueKeyOwnershipProof` into the given concrete key
 	/// ownership proof type.
 	pub fn decode<T: Decode>(self) -> Option<T> {
+		log::info!("finality-grandpa::OpaqueKeyOwnershipProof::decode");
 		codec::Decode::decode(&mut &self.0[..]).ok()
 	}
 }
