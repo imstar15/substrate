@@ -619,9 +619,20 @@ impl<T: Config> Pallet<T> {
 			// all nodes from sending the heartbeats at the same block and causing a temporary (but
 			// deterministic) spike in transactions.
 			sp_runtime::print("send_heartbeats should_heartbeat if");
+
+			let rd_choice = random_choice(progress);
+
 			let result = progress >= START_HEARTBEAT_FINAL_PERIOD ||
-				progress >= START_HEARTBEAT_RANDOM_PERIOD && random_choice(progress);
+				progress >= START_HEARTBEAT_RANDOM_PERIOD && rd_choice;
+
+			log::debug!("progress: {:?}", progress);
+			log::debug!("START_HEARTBEAT_FINAL_PERIOD: {:?}", START_HEARTBEAT_FINAL_PERIOD);
+			log::debug!("START_HEARTBEAT_RANDOM_PERIOD: {:?}", START_HEARTBEAT_RANDOM_PERIOD);
+			sp_runtime::print("rd_choice: ");
+			sp_runtime::print(rd_choice);
+			sp_runtime::print("result: ");
 			sp_runtime::print(result);
+		
 			result
 		} else {
 			sp_runtime::print("send_heartbeats should_heartbeat else");
