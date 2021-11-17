@@ -84,6 +84,7 @@ where
 	BE: Backend<Block>,
 	Client: ClientForGrandpa<Block, BE>,
 {
+	log::info!("observer::grandpa_observer -> finalize_block");
 	let authority_set = authority_set.clone();
 	let client = client.clone();
 	let voters = voters.clone();

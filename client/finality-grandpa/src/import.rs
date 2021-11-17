@@ -739,6 +739,7 @@ where
 		enacts_change: bool,
 		initial_sync: bool,
 	) -> Result<(), ConsensusError> {
+		log::info!("import_justification -> finalize_block");
 		if justification.0 != GRANDPA_ENGINE_ID {
 			// TODO: the import queue needs to be refactored to be able dispatch to the correct
 			// `JustificationImport` instance based on `ConsensusEngineId`, or we need to build a
