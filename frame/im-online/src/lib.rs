@@ -620,7 +620,7 @@ impl<T: Config> Pallet<T> {
 			// deterministic) spike in transactions.
 			sp_runtime::print("send_heartbeats should_heartbeat if");
 			let result = progress >= START_HEARTBEAT_FINAL_PERIOD ||
-				progress >= START_HEARTBEAT_RANDOM_PERIOD && random_choice(progress)
+				progress >= START_HEARTBEAT_RANDOM_PERIOD && random_choice(progress);
 			sp_runtime::print(result);
 			result
 		} else {
@@ -628,7 +628,7 @@ impl<T: Config> Pallet<T> {
 			// otherwise we fallback to using the block number calculated at the beginning
 			// of the session that should roughly correspond to the middle of the session
 			let heartbeat_after = <HeartbeatAfter<T>>::get();
-			let result = block_number >= heartbeat_after
+			let result = block_number >= heartbeat_after;
 			sp_runtime::print(result);
 			result
 		};
