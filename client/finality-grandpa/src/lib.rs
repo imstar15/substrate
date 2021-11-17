@@ -1127,7 +1127,7 @@ where
 			},
 		}
 
-		log::info!("Stream::poll_next(Pin::new(&mut self.voter_commands_rx), cx)");
+		// log::info!("Stream::poll_next(Pin::new(&mut self.voter_commands_rx), cx)");
 		match Stream::poll_next(Pin::new(&mut self.voter_commands_rx), cx) {
 			Poll::Pending => {},
 			Poll::Ready(None) => {
@@ -1143,7 +1143,7 @@ where
 			},
 		}
 
-		log::info!("Future::poll(Pin::new(&mut self.network), cx)");
+		// log::info!("Future::poll(Pin::new(&mut self.network), cx)");
 		Future::poll(Pin::new(&mut self.network), cx)
 	}
 }
