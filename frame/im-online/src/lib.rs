@@ -618,13 +618,19 @@ impl<T: Config> Pallet<T> {
 			// haven't sent an heartbeat yet we'll send one unconditionally. the idea is to prevent
 			// all nodes from sending the heartbeats at the same block and causing a temporary (but
 			// deterministic) spike in transactions.
-			progress >= START_HEARTBEAT_FINAL_PERIOD ||
+			sp_runtime::print("send_heartbeats should_heartbeat if");
+			let result = progress >= START_HEARTBEAT_FINAL_PERIOD ||
 				progress >= START_HEARTBEAT_RANDOM_PERIOD && random_choice(progress)
+			sp_runtime::print(result);
+			result
 		} else {
+			sp_runtime::print("send_heartbeats should_heartbeat else");
 			// otherwise we fallback to using the block number calculated at the beginning
 			// of the session that should roughly correspond to the middle of the session
 			let heartbeat_after = <HeartbeatAfter<T>>::get();
-			block_number >= heartbeat_after
+			let result = block_number >= heartbeat_after
+			sp_runtime::print(result);
+			result
 		};
 
 		sp_runtime::print("send_heartbeats should_heartbeat");
