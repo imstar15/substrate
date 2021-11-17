@@ -630,6 +630,7 @@ impl<T: Config> Pallet<T> {
 		sp_runtime::print("send_heartbeats should_heartbeat");
 
 		if !should_heartbeat {
+			sp_runtime::print("send_heartbeats OffchainErr::TooEarly");
 			return Err(OffchainErr::TooEarly)
 		}
 
