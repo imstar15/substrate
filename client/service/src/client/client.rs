@@ -2030,6 +2030,7 @@ where
 		justification: Option<Justification>,
 		notify: bool,
 	) -> sp_blockchain::Result<()> {
+		log::info!("finalize_blockA");
 		self.lock_import_and_run(|operation| {
 			self.apply_finality(operation, id, justification, notify)
 		})
@@ -2058,6 +2059,7 @@ where
 		justification: Option<Justification>,
 		notify: bool,
 	) -> sp_blockchain::Result<()> {
+		log::info!("finalize_blockB");
 		(**self).finalize_block(id, justification, notify)
 	}
 }
