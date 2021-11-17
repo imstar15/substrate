@@ -16,6 +16,7 @@ frame-system = { version = "4.0.0-dev", default-features = false, path = "../../
 sp-application-crypto = { version = "4.0.0-dev", default-features = false, path = "../../../primitives/application-crypto" }
 sp-core = { version = "4.0.0-dev", default-features = false, path = "../../../primitives/core" }
 sp-runtime = { version = "4.0.0-dev", default-features = false, path = "../../../primitives/runtime" }
+log = { version = "0.4.14", default-features = false }
 
 [dev-dependencies]
 sp-serializer = { version = "3.0.0", path = "../../../primitives/serializer" }

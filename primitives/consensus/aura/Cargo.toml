@@ -23,6 +23,7 @@ sp-timestamp = { version = "4.0.0-dev", default-features = false, path = "../../
 sp-consensus-slots = { version = "0.10.0-dev", default-features = false, path = "../slots" }
 sp-consensus = { version = "0.10.0-dev", path = "../common", optional = true }
 async-trait = { version = "0.1.50", optional = true }
+log = { version = "0.4.14", default-features = false }
 
 [features]
 default = ["std"]
