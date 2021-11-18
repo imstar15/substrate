@@ -77,6 +77,7 @@ impl CryptoStore for LocalKeystore {
 	}
 
 	async fn sr25519_public_keys(&self, id: KeyTypeId) -> Vec<sr25519::Public> {
+		log::info!(target: "runtime", "keystore::sr25519_public_keys id: {:?}", id);
 		SyncCryptoStore::sr25519_public_keys(self, id)
 	}
 
@@ -220,6 +221,7 @@ impl SyncCryptoStore for LocalKeystore {
 	}
 
 	fn sr25519_public_keys(&self, key_type: KeyTypeId) -> Vec<sr25519::Public> {
+		log::info!(target: "runtime", "keystore::sr25519_public_keys 22222 key_type: {:?}", key_type);
 		self.0
 			.read()
 			.raw_public_keys(key_type)
