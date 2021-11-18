@@ -443,6 +443,7 @@ impl<'a> Ready<'a> {
 	///
 	/// Returns an error if the substream has been closed.
 	pub fn send(mut self, notification: impl Into<Vec<u8>>) -> Result<(), ()> {
+		log::info!("self.lock.start_send");
 		self.lock
 			.start_send(NotificationsSinkMessage::Notification { message: notification.into() })
 			.map_err(|_| ())

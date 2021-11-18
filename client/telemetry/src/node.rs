@@ -247,6 +247,7 @@ where
 	}
 
 	fn start_send(mut self: Pin<&mut Self>, item: TelemetryPayload) -> Result<(), Self::Error> {
+		log::info!("node.start_send");
 		// Any buffered outgoing telemetry messages are discarded while (re-)connecting.
 		match &mut self.socket {
 			NodeSocket::Connected(conn) => match serde_json::to_vec(&item) {

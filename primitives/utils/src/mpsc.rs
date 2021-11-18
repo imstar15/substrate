@@ -95,6 +95,7 @@ mod inner {
 
 		/// Proxy function to mpsc::UnboundedSender
 		pub fn start_send(&mut self, msg: T) -> Result<(), SendError> {
+			log::info!("mpsc.start_send");
 			self.1.start_send(msg)
 		}
 
@@ -190,6 +191,7 @@ mod inner {
 		}
 
 		fn start_send(mut self: Pin<&mut Self>, msg: T) -> Result<(), Self::Error> {
+			log::info!("mpsc.start_send 1111");
 			TracingUnboundedSender::start_send(&mut *self, msg)
 		}
 
@@ -214,6 +216,7 @@ mod inner {
 		}
 
 		fn start_send(self: Pin<&mut Self>, msg: T) -> Result<(), Self::Error> {
+			log::info!("mpsc.start_send 33333");
 			self.unbounded_send(msg).map_err(TrySendError::into_send_error)
 		}
 
