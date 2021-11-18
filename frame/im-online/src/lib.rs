@@ -646,10 +646,10 @@ impl<T: Config> Pallet<T> {
 
 		sp_runtime::print("send_heartbeats should_heartbeat");
 
-		if !should_heartbeat {
-			sp_runtime::print("send_heartbeats OffchainErr::TooEarly");
-			return Err(OffchainErr::TooEarly)
-		}
+		// if !should_heartbeat {
+		// 	sp_runtime::print("send_heartbeats OffchainErr::TooEarly");
+		// 	return Err(OffchainErr::TooEarly)
+		// }
 
 		sp_runtime::print("send_heartbeats ValidatorSet::session_index");
 
