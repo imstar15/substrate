@@ -168,6 +168,7 @@ impl<Block: BlockT> Blockchain<Block> {
 		body: Option<Vec<<Block as BlockT>::Extrinsic>>,
 		new_state: NewBlockState,
 	) -> sp_blockchain::Result<()> {
+		log::info!("in_mem::insert");
 		let number = header.number().clone();
 		if new_state.is_best() {
 			self.apply_head(&header)?;

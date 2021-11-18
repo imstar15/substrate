@@ -437,7 +437,7 @@ where
 
 	fn start_send(self: Pin<&mut Self>, item: Vec<u8>) -> Result<(), Self::Error> {
 		let mut this = self.project();
-		log::info!("Sink::start_send 33333");
+		// log::info!("Sink::start_send 33333");
 		Sink::start_send(this.socket.as_mut(), io::Cursor::new(item))
 			.map_err(NotificationsOutError::Io)
 	}
