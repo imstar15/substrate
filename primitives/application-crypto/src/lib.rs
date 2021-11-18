@@ -320,10 +320,10 @@ macro_rules! app_crypto_public_common {
 			type Signature = Signature;
 
 			fn all() -> $crate::Vec<Self> {
-				log::debug!(
-					target: "runtime::im-online",
-					"sp_application_crypto::all"
-				);
+				// log::debug!(
+				// 	target: "runtime::im-online",
+				// 	"sp_application_crypto::all"
+				// );
 				<$public as $crate::RuntimePublic>::all($key_type)
 					.into_iter()
 					.map(Self)
