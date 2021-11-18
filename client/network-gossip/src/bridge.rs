@@ -423,7 +423,6 @@ mod tests {
 			.collect::<Vec<_>>();
 
 		// Send first event before subscribing.
-		log::info!("bridage::event_sender::start_send 2222");
 		event_sender
 			.start_send(events[0].clone())
 			.expect("Event stream is unbounded; qed.");
@@ -434,7 +433,6 @@ mod tests {
 		}
 
 		// Send second event after subscribing.
-		log::info!("bridage::event_sender::start_send 3333");
 		event_sender
 			.start_send(events[1].clone())
 			.expect("Event stream is unbounded; qed.");
@@ -568,7 +566,6 @@ mod tests {
 			let mut event_sender = network.inner.lock().unwrap().event_senders.pop().unwrap();
 
 			// Register the remote peer.
-			log::info!("bridage::event_sender::start_send 4444");
 			event_sender
 				.start_send(Event::NotificationStreamOpened {
 					remote: remote_peer.clone(),
@@ -597,7 +594,6 @@ mod tests {
 					})
 					.collect();
 
-				log::info!("bridage::event_sender::start_send 55555");
 				event_sender
 					.start_send(Event::NotificationsReceived {
 						remote: remote_peer.clone(),

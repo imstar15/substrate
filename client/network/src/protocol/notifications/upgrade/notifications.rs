@@ -222,7 +222,6 @@ where
 					match Sink::poll_ready(this.socket.as_mut(), cx) {
 						Poll::Ready(_) => {
 							*this.handshake = NotificationsInSubstreamHandshake::Flush;
-							log::info!("Sink::start_send1111");
 							match Sink::start_send(this.socket.as_mut(), io::Cursor::new(msg)) {
 								Ok(()) => {},
 								Err(err) => return Poll::Ready(Err(err)),
@@ -275,7 +274,6 @@ where
 					match Sink::poll_ready(this.socket.as_mut(), cx) {
 						Poll::Ready(_) => {
 							*this.handshake = NotificationsInSubstreamHandshake::Flush;
-							log::info!("Sink::start_send 22222");
 							match Sink::start_send(this.socket.as_mut(), io::Cursor::new(msg)) {
 								Ok(()) => {},
 								Err(err) => return Poll::Ready(Some(Err(err))),

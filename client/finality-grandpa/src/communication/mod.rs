@@ -992,7 +992,6 @@ impl<Block: BlockT> Sink<(RoundNumber, Commit<Block>)> for CommitsOut<Block> {
 		self: Pin<&mut Self>,
 		input: (RoundNumber, Commit<Block>),
 	) -> Result<(), Self::Error> {
-		log::info!("start_send 22222");
 		if !self.is_voter {
 			return Ok(())
 		}

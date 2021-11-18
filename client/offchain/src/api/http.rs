@@ -642,13 +642,11 @@ impl Future for HttpWorker {
 					// `tx` is ready. Read a chunk from the socket and send it to the channel.
 					match Stream::poll_next(Pin::new(&mut body), cx) {
 						Poll::Ready(Some(Ok(chunk))) => {
-							log::info!("tx.start_send 11111");
 							let _ = tx.start_send(Ok(chunk));
 							me.requests.push((id, HttpWorkerRequest::ReadBody { body, tx }));
 							cx.waker().wake_by_ref(); // reschedule in order to continue reading
 						},
 						Poll::Ready(Some(Err(err))) => {
-							log::info!("tx.start_send 22222");
 							let _ = tx.start_send(Err(err));
 							// don't insert the request back
 						},
