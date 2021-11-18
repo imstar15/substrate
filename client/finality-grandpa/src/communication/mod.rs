@@ -682,6 +682,7 @@ impl<Block: BlockT> Sink<Message<Block>> for OutgoingMessages<Block> {
 	}
 
 	fn start_send(mut self: Pin<&mut Self>, mut msg: Message<Block>) -> Result<(), Self::Error> {
+		log::info!("sc_finality_grandpa::start_send");
 		// if we've voted on this round previously under the same key, send that vote instead
 		match &mut msg {
 			finality_grandpa::Message::PrimaryPropose(ref mut vote) =>
