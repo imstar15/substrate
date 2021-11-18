@@ -1069,6 +1069,7 @@ where
 		round: RoundNumber,
 		commit: Commit<Block>,
 	) -> Result<(), Self::Error> {
+		log::info!("finalize_blockA hash: {}, number: {}, round: {}", hash, number, round);
 		finalize_block(
 			self.client.clone(),
 			&self.authority_set,
