@@ -775,6 +775,7 @@ fn check_compact_commit<Block: BlockT>(
 	set_id: SetId,
 	telemetry: Option<&TelemetryHandle>,
 ) -> Result<(), ReputationChange> {
+	log::info("check_compact_commit -> check_message_signature_with_buffer");
 	// 4f + 1 = equivocations from f voters.
 	let f = voters.total_weight() - voters.threshold();
 	let full_threshold = (f + voters.total_weight()).0;

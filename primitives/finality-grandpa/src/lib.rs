@@ -356,7 +356,7 @@ where
 	H: Encode,
 	N: Encode,
 {
-	log::info!("finality-grandpa::check_message_signature");
+	log::info!("finality-grandpa::check_message_signature -> check_message_signature_with_buffer");
 	check_message_signature_with_buffer(message, id, signature, round, set_id, &mut Vec::new())
 }
 
