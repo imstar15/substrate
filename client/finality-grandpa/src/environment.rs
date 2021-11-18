@@ -1256,6 +1256,7 @@ where
 	BE: BackendT<Block>,
 	Client: ClientForGrandpa<Block, BE>,
 {
+	log::info!("env::finalize_block");
 	// NOTE: lock must be held through writing to DB to avoid race. this lock
 	//       also implicitly synchronizes the check for last finalized number
 	//       below.

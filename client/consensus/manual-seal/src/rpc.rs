@@ -135,6 +135,7 @@ impl<Hash: Send + 'static> ManualSealApi<Hash> for ManualSeal<Hash> {
 		hash: Hash,
 		justification: Option<EncodedJustification>,
 	) -> FutureResult<bool> {
+		log::info!("rpc::finalize_block");
 		let mut sink = self.import_block_channel.clone();
 		let future = async move {
 			let (sender, receiver) = oneshot::channel();

@@ -44,6 +44,7 @@ where
 	F: Finalizer<B, CB>,
 	CB: ClientBackend<B>,
 {
+	log::info!("finalize_block::finalize_block");
 	let FinalizeBlockParams { hash, mut sender, justification, finalizer, .. } = params;
 
 	match finalizer.finalize_block(BlockId::Hash(hash), justification, true) {

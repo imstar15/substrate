@@ -373,6 +373,7 @@ where
 	/// Finalize the block - it is up the caller to ensure that all header fields are valid
 	/// except state-root.
 	pub fn finalize_block() -> System::Header {
+		log::info!("Executive::finalize_block");
 		sp_io::init_tracing();
 		sp_tracing::enter_span!(sp_tracing::Level::TRACE, "finalize_block");
 		<frame_system::Pallet<System>>::note_finished_extrinsics();

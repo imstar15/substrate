@@ -202,6 +202,7 @@ where
 		block: BlockId<Block>,
 		_justification: Option<Justification>,
 	) -> ClientResult<()> {
+		log::info!("backend::finalize_block");
 		self.blockchain.storage().finalize_header(block)
 	}
 

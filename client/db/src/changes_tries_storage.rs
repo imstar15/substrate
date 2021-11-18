@@ -785,6 +785,7 @@ mod tests {
 		};
 
 		let finalize_block = |number| {
+			log::info!("trie::finalize_block");
 			let header = backend.blockchain().header(BlockId::Number(number)).unwrap().unwrap();
 			let mut tx = Transaction::new();
 			let cache_ops = backend

@@ -826,6 +826,7 @@ where
 		block: BlockId<Block>,
 		justification: Option<Justification>,
 	) -> sp_blockchain::Result<()> {
+		log::info!("in_mem::finalize_block");
 		self.blockchain.finalize_header(block, justification)
 	}
 
