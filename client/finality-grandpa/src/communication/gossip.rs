@@ -877,7 +877,7 @@ impl<Block: BlockT> Inner<Block> {
 		who: &PeerId,
 		full: &VoteMessage<Block>,
 	) -> Action<Block::Hash> {
-		log::info("validate_round_message -> check_message_signature");
+		log::info!("validate_round_message -> check_message_signature");
 		match self.consider_vote(full.round, full.set_id) {
 			Consider::RejectFuture => return Action::Discard(Misbehavior::FutureMessage.cost()),
 			Consider::RejectOutOfScope =>
