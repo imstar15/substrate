@@ -221,12 +221,21 @@ impl SyncCryptoStore for LocalKeystore {
 	}
 
 	fn sr25519_public_keys(&self, key_type: KeyTypeId) -> Vec<sr25519::Public> {
-		log::info!(target: "runtime", "LocalKeystore::sr25519_public_keys 22222 key_type: {:?}", key_type);
-		let result = self.0
+		log::info!(target: "runtime", "LocalKeystore::sr25519_public_keys key_type: {:?}", key_type);
+		
+		let keys = self.0
 			.read()
-			.raw_public_keys(key_type)
-			.map(|v| v.into_iter().map(|k| sr25519::Public::from_slice(k.as_slice())).collect())
+			.raw_public_keys(key_type);
+		
+		log::info!(target: "runtime", "LocalKeystore::sr25519_public_keys keys.len(): {:?}", keys.unwrap().len());
+
+		let keys = self.0
+			.read()
+			.raw_public_keys(key_type);
+
+		let result = keys.map(|v| v.into_iter().map(|k| sr25519::Public::from_slice(k.as_slice())).collect())
 			.unwrap_or_default();
+		
 		log::info!(target: "runtime", "LocalKeystore::sr25519_public_keys, result: {:?}", result);
 		result
 	}
