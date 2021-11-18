@@ -835,7 +835,10 @@ impl<T: Config> frame_support::traits::EstimateNextSessionRotation<T::BlockNumbe
 	fn estimate_current_session_progress(_now: T::BlockNumber) -> (Option<Permill>, Weight) {
 		sp_runtime::print("estimate_current_session_progress");
 		let elapsed = CurrentSlot::<T>::get().saturating_sub(Self::current_epoch_start()) + 1;
+		log::info!("CurrentSlot::<T>::get(): {:?}", CurrentSlot::<T>::get());
+		log::info!("Self::current_epoch_start(): {:?}", Self::current_epoch_start());
 		log::info!("elapsed: {:?}", elapsed);
+		log::info!("progress: {:?}/{:?}", elapsed, T::EpochDuration::get());
 		sp_runtime::print(T::EpochDuration::get());
 		(
 			Some(Permill::from_rational(*elapsed, T::EpochDuration::get())),
