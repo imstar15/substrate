@@ -241,7 +241,7 @@ impl<T: Config> Pallet<T> {
 		solution_type: &str,
 	) -> Result<(), MinerError<T>> {
 		Self::unsigned_pre_dispatch_checks(raw_solution).map_err(|err| {
-			log!(debug, "pre-dispatch checks failed for {} solution: {:?}", solution_type, err);
+			log!(info, "pre-dispatch checks failed for {} solution: {:?}", solution_type, err);
 			MinerError::PreDispatchChecksFailed(err)
 		})?;
 
@@ -618,6 +618,10 @@ impl<T: Config> Pallet<T> {
 
 		// ensure round is current
 		ensure!(Self::round() == raw_solution.round, Error::<T>::OcwCallWrongEra);
+
+		let desired_targets = Self::desired_targets().unwrap_or_default();
+		let unique_targets = raw_solution.solution.unique_targets().len() as u32;
+		log!(info, "unsigned_pre_dispatch_checks, desired_targets = {}, unique_targets = {}", desired_targets, unique_targets);
 
 		// ensure correct number of winners.
 		ensure!(
