@@ -177,6 +177,7 @@ use frame_support::{
 		ReservableCurrency, SignedImbalance, StoredMap, TryDrop, WithdrawReasons,
 	},
 	WeakBoundedVec,
+	log,
 };
 use frame_system as system;
 use scale_info::TypeInfo;
@@ -1100,6 +1101,7 @@ impl<T: Config<I>, I: 'static> fungible::Inspect<T::AccountId> for Pallet<T, I> 
 
 impl<T: Config<I>, I: 'static> fungible::Mutate<T::AccountId> for Pallet<T, I> {
 	fn mint_into(who: &T::AccountId, amount: Self::Balance) -> DispatchResult {
+		log::error!("mint_into 222");
 		if amount.is_zero() {
 			return Ok(())
 		}

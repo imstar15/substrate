@@ -22,6 +22,7 @@ use frame_support::{
 	storage::KeyPrefixIterator,
 	traits::{tokens::nonfungibles::*, Get},
 	BoundedSlice,
+	log,
 };
 use sp_runtime::{DispatchError, DispatchResult};
 use sp_std::prelude::*;
@@ -126,6 +127,7 @@ impl<T: Config<I>, I: 'static> Mutate<<T as SystemConfig>::AccountId> for Pallet
 		item: &Self::ItemId,
 		who: &T::AccountId,
 	) -> DispatchResult {
+		log::error!("mint_into 444");
 		Self::do_mint(*collection, *item, who.clone(), |_| Ok(()))
 	}
 

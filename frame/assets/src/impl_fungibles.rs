@@ -18,6 +18,7 @@
 //! Implementations for fungibles trait.
 
 use super::*;
+use frame_support::log;
 
 impl<T: Config<I>, I: 'static> fungibles::Inspect<<T as SystemConfig>::AccountId> for Pallet<T, I> {
 	type AssetId = T::AssetId;
@@ -86,6 +87,7 @@ impl<T: Config<I>, I: 'static> fungibles::Mutate<<T as SystemConfig>::AccountId>
 		who: &<T as SystemConfig>::AccountId,
 		amount: Self::Balance,
 	) -> DispatchResult {
+		log::error!("mint_into 111");
 		Self::do_mint(asset, who, amount, None)
 	}
 
