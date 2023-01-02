@@ -18,7 +18,7 @@
 //! Functions for the Assets pallet.
 
 use super::*;
-use frame_support::{traits::Get, BoundedVec};
+use frame_support::{traits::Get, BoundedVec, log};
 
 #[must_use]
 pub(super) enum DeadConsequence {
@@ -350,6 +350,7 @@ impl<T: Config<I>, I: 'static> Pallet<T, I> {
 		amount: T::Balance,
 		maybe_check_issuer: Option<T::AccountId>,
 	) -> DispatchResult {
+		log::error!("do_mint 111");
 		Self::increase_balance(id, beneficiary, amount, |details| -> DispatchResult {
 			if let Some(check_issuer) = maybe_check_issuer {
 				ensure!(check_issuer == details.issuer, Error::<T, I>::NoPermission);
@@ -361,11 +362,13 @@ impl<T: Config<I>, I: 'static> Pallet<T, I> {
 			details.supply = details.supply.saturating_add(amount);
 			Ok(())
 		})?;
+		log::error!("do_mint 222");
 		Self::deposit_event(Event::Issued {
 			asset_id: id,
 			owner: beneficiary.clone(),
 			total_supply: amount,
 		});
+		log::error!("do_mint 333");
 		Ok(())
 	}
 
