@@ -116,29 +116,38 @@ impl<T: Config<I>, I: 'static> Pallet<T, I> {
 		amount: T::Balance,
 		increase_supply: bool,
 	) -> DepositConsequence {
+		log::error!("can_increase 111");
 		let details = match Asset::<T, I>::get(id) {
 			Some(details) => details,
 			None => return DepositConsequence::UnknownAsset,
 		};
+		log::error!("can_increase 222");
 		if increase_supply && details.supply.checked_add(&amount).is_none() {
+			log::error!("can_increase 333");
 			return DepositConsequence::Overflow
 		}
+		log::error!("can_increase 444");
 		if let Some(balance) = Self::maybe_balance(id, who) {
+			log::error!("can_increase 555");
 			if balance.checked_add(&amount).is_none() {
+				log::error!("can_increase 666");
 				return DepositConsequence::Overflow
 			}
 		} else {
 			if amount < details.min_balance {
+				log::error!("can_increase 777");
 				return DepositConsequence::BelowMinimum
 			}
 			if !details.is_sufficient && !frame_system::Pallet::<T>::can_inc_consumer(who) {
+				log::error!("can_increase 888");
 				return DepositConsequence::CannotCreate
 			}
 			if details.is_sufficient && details.sufficients.checked_add(1).is_none() {
+				log::error!("can_increase 999");
 				return DepositConsequence::Overflow
 			}
 		}
-
+		log::error!("can_increase aaa");
 		DepositConsequence::Success
 	}
 
@@ -432,6 +441,7 @@ impl<T: Config<I>, I: 'static> Pallet<T, I> {
 			log::error!("increase_balance eee");
 			Ok(())
 		})?;
+		log::error!("increase_balance fff");
 		Ok(())
 	}
 
