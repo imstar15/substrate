@@ -352,14 +352,18 @@ impl<T: Config<I>, I: 'static> Pallet<T, I> {
 	) -> DispatchResult {
 		log::error!("do_mint 111");
 		Self::increase_balance(id, beneficiary, amount, |details| -> DispatchResult {
+			log::error!("do_mint 111 111");
 			if let Some(check_issuer) = maybe_check_issuer {
 				ensure!(check_issuer == details.issuer, Error::<T, I>::NoPermission);
 			}
+			log::error!("do_mint 111 222");
 			debug_assert!(
 				T::Balance::max_value() - details.supply >= amount,
 				"checked in prep; qed"
 			);
+			log::error!("do_mint 111 333");
 			details.supply = details.supply.saturating_add(amount);
+			log::error!("do_mint 111 444");
 			Ok(())
 		})?;
 		log::error!("do_mint 222");
