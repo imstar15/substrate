@@ -390,34 +390,46 @@ impl<T: Config<I>, I: 'static> Pallet<T, I> {
 			&mut AssetDetails<T::Balance, T::AccountId, DepositBalanceOf<T, I>>,
 		) -> DispatchResult,
 	) -> DispatchResult {
+		log::error!("increase_balance 111");
 		if amount.is_zero() {
 			return Ok(())
 		}
-
+		log::error!("increase_balance 222");
 		Self::can_increase(id, beneficiary, amount, true).into_result()?;
+		log::error!("increase_balance 333");
 		Asset::<T, I>::try_mutate(id, |maybe_details| -> DispatchResult {
+			log::error!("increase_balance 444");
 			let details = maybe_details.as_mut().ok_or(Error::<T, I>::Unknown)?;
-
+			log::error!("increase_balance 555");
 			check(details)?;
+			log::error!("increase_balance 666");
 
 			Account::<T, I>::try_mutate(id, beneficiary, |maybe_account| -> DispatchResult {
+				log::error!("increase_balance 777");
 				match maybe_account {
 					Some(ref mut account) => {
+						log::error!("increase_balance 888");
 						account.balance.saturating_accrue(amount);
+						log::error!("increase_balance 999");
 					},
 					maybe_account @ None => {
+						log::error!("increase_balance aaa");
 						// Note this should never fail as it's already checked by `can_increase`.
 						ensure!(amount >= details.min_balance, TokenError::BelowMinimum);
+						log::error!("increase_balance bbb");
 						*maybe_account = Some(AssetAccountOf::<T, I> {
 							balance: amount,
 							reason: Self::new_account(beneficiary, details, None)?,
 							is_frozen: false,
 							extra: T::Extra::default(),
 						});
+						log::error!("increase_balance ccc");
 					},
 				}
+				log::error!("increase_balance ddd");
 				Ok(())
 			})?;
+			log::error!("increase_balance eee");
 			Ok(())
 		})?;
 		Ok(())
