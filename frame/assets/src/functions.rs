@@ -118,8 +118,14 @@ impl<T: Config<I>, I: 'static> Pallet<T, I> {
 	) -> DepositConsequence {
 		log::error!("can_increase 111");
 		let details = match Asset::<T, I>::get(id) {
-			Some(details) => details,
-			None => return DepositConsequence::UnknownAsset,
+			Some(details) => {
+				log::error!("can_increase 111 111");
+				details
+			},
+			None => {
+				log::error!("can_increase 111 222");
+				return DepositConsequence::UnknownAsset
+			},
 		};
 		log::error!("can_increase 222");
 		if increase_supply && details.supply.checked_add(&amount).is_none() {
