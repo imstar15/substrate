@@ -387,6 +387,7 @@ impl<AccountId, U: Unbalanced<AccountId>> Balanced<AccountId> for U {
 		amount: Self::Balance,
 		// TODO: liveness: ExistenceRequirement,
 	) -> Result<Credit<AccountId, Self>, DispatchError> {
+		log::error!("tokens::withdraw");
 		let decrease = U::decrease_balance(asset, who, amount)?;
 		Ok(credit(asset, decrease))
 	}
