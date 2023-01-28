@@ -1700,6 +1700,11 @@ where
 		Self::try_mutate_account(
 			who,
 			|account, _| -> Result<Self::NegativeImbalance, DispatchError> {
+				log::error!(
+					target: "runtime::balances",
+					"balances::withdraw, try_mutate_account, account: {:?}",
+					account,
+				);
 				let new_free_account =
 					account.free.checked_sub(&value).ok_or(Error::<T, I>::InsufficientBalance)?;
 
