@@ -1702,8 +1702,8 @@ where
 			|account, _| -> Result<Self::NegativeImbalance, DispatchError> {
 				log::error!(
 					target: "runtime::balances",
-					"balances::withdraw, try_mutate_account, account: {:?}",
-					account,
+					"balances::withdraw, try_mutate_account, account.free: {:?}, account.reserved: {:?}",
+					account.free, account.reserved,
 				);
 				let new_free_account =
 					account.free.checked_sub(&value).ok_or(Error::<T, I>::InsufficientBalance)?;
