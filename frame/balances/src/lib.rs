@@ -1679,6 +1679,12 @@ where
 		reasons: WithdrawReasons,
 		liveness: ExistenceRequirement,
 	) -> result::Result<Self::NegativeImbalance, DispatchError> {
+		log::warn!(
+			target: "runtime::balances",
+			"balances::withdraw who: {:?}, value: {:?}"
+			who, value,
+		);
+	
 		if value.is_zero() {
 			return Ok(NegativeImbalance::zero())
 		}
