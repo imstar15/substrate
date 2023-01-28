@@ -31,7 +31,7 @@ impl<T: Config<I>, I: 'static> StoredMap<(T::AssetId, T::AccountId), T::Extra> f
 		f: impl FnOnce(&mut Option<T::Extra>) -> Result<R, E>,
 	) -> Result<R, E> {
 		let &(id, ref who) = id_who;
-		log::error!("try_mutate_exists 111, id_who: {:?}", );
+		log::error!("try_mutate_exists 111, id_who: {:?}", id_who);
 		let mut maybe_extra = Account::<T, I>::get(id, who).map(|a| a.extra);
 		log::error!("try_mutate_exists 222, maybe_extra: {:?}", maybe_extra);
 		let r = f(&mut maybe_extra)?;
