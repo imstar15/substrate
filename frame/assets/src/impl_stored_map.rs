@@ -26,7 +26,7 @@ impl<T: Config<I>, I: 'static> StoredMap<(T::AssetId, T::AccountId), T::Extra> f
 		Account::<T, I>::get(id, who).map(|a| a.extra).unwrap_or_default()
 	}
 
-	fn try_mutate_exists<R, E: From<DispatchError>>(
+	fn try_mutate_exists<R: std::fmt::Debug, E: From<DispatchError>>(
 		id_who: &(T::AssetId, T::AccountId),
 		f: impl FnOnce(&mut Option<T::Extra>) -> Result<R, E>,
 	) -> Result<R, E> {
