@@ -18,6 +18,7 @@
 //! Assets pallet's `StoredMap` implementation.
 
 use super::*;
+use frame_support::log;
 
 impl<T: Config<I>, I: 'static> StoredMap<(T::AssetId, T::AccountId), T::Extra> for Pallet<T, I> {
 	fn get(id_who: &(T::AssetId, T::AccountId)) -> T::Extra {
@@ -30,13 +31,17 @@ impl<T: Config<I>, I: 'static> StoredMap<(T::AssetId, T::AccountId), T::Extra> f
 		f: impl FnOnce(&mut Option<T::Extra>) -> Result<R, E>,
 	) -> Result<R, E> {
 		let &(id, ref who) = id_who;
+		log::error!("try_mutate_exists 111, id_who: {:?}", );
 		let mut maybe_extra = Account::<T, I>::get(id, who).map(|a| a.extra);
+		log::error!("try_mutate_exists 222, maybe_extra: {:?}", maybe_extra);
 		let r = f(&mut maybe_extra)?;
+		log::error!("try_mutate_exists 333, r: {:?}", r);
 		// They want to write some value or delete it.
 		// If the account existed and they want to write a value, then we write.
 		// If the account didn't exist and they want to delete it, then we let it pass.
 		// Otherwise, we fail.
 		Account::<T, I>::try_mutate(id, who, |maybe_account| {
+			log::error!("try_mutate_exists 333, maybe_account: {:?}", maybe_account);
 			if let Some(extra) = maybe_extra {
 				// They want to write a value. Let this happen only if the account actually exists.
 				if let Some(ref mut account) = maybe_account {
