@@ -35,7 +35,7 @@ impl<T: Config<I>, I: 'static> StoredMap<(T::AssetId, T::AccountId), T::Extra> f
 		let mut maybe_extra = Account::<T, I>::get(id, who).map(|a| a.extra);
 		log::error!("try_mutate_exists 222, maybe_extra: {:?}", maybe_extra);
 		let r = f(&mut maybe_extra)?;
-		log::error!("try_mutate_exists 333, r: {:?}", r);
+		log::error!("try_mutate_exists 333");
 		// They want to write some value or delete it.
 		// If the account existed and they want to write a value, then we write.
 		// If the account didn't exist and they want to delete it, then we let it pass.
