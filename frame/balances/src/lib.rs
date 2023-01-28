@@ -1690,7 +1690,7 @@ where
 	) -> result::Result<Self::NegativeImbalance, DispatchError> {
 		log::error!(
 			target: "runtime::balances",
-			"balances::withdraw who: {:?}, value: {:?}"
+			"balances::withdraw who: {:?}, value: {:?}",
 			who, value,
 		);
 		if value.is_zero() {
