@@ -612,6 +612,7 @@ where
 	}
 
 	fn weight_to_fee(weight: Weight) -> BalanceOf<T> {
+		log::error!("weight_to_fee E");
 		// cap the weight to the maximum defined in runtime, otherwise it will be the
 		// `Bounded` maximum of its data type, which is not desired.
 		let capped_weight = weight.min(T::BlockWeights::get().max_block);
@@ -958,6 +959,7 @@ mod tests {
 		type Balance = u64;
 
 		fn weight_to_fee(weight: &Weight) -> Self::Balance {
+			log::error!("weight_to_fee D");
 			Self::Balance::saturated_from(weight.ref_time())
 				.saturating_mul(WEIGHT_TO_FEE.with(|v| *v.borrow()))
 		}
@@ -967,6 +969,7 @@ mod tests {
 		type Balance = u64;
 
 		fn weight_to_fee(weight: &Weight) -> Self::Balance {
+			log::error!("weight_to_fee F");
 			Self::Balance::saturated_from(weight.ref_time())
 				.saturating_mul(TRANSACTION_BYTE_FEE.with(|v| *v.borrow()))
 		}
