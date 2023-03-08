@@ -159,7 +159,6 @@ where
 	/// This should not be overridden in most circumstances. Calculation is done in the
 	/// `Balance` type and never overflows. All evaluation is saturating.
 	fn weight_to_fee(weight: &Weight) -> Self::Balance {
-		log::error!("weight_to_fee A");
 		Self::polynomial()
 			.iter()
 			.fold(Self::Balance::saturated_from(0u32), |mut acc, args| {
@@ -194,7 +193,6 @@ where
 	type Balance = T;
 
 	fn weight_to_fee(weight: &Weight) -> Self::Balance {
-		log::error!("weight_to_fee B");
 		Self::Balance::saturated_from(weight.ref_time())
 	}
 }
@@ -218,7 +216,6 @@ where
 	type Balance = T;
 
 	fn weight_to_fee(weight: &Weight) -> Self::Balance {
-		log::error!("weight_to_fee C");
 		Self::Balance::saturated_from(weight.ref_time()).saturating_mul(M::get())
 	}
 }
