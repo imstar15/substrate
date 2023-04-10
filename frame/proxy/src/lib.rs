@@ -41,7 +41,7 @@ use frame_support::{
 	weights::GetDispatchInfo,
 	RuntimeDebug,
 };
-use frame_system::{self as system};
+use frame_system::{self as system, log};
 use scale_info::TypeInfo;
 use sp_io::hashing::blake2_256;
 use sp_runtime::{
@@ -840,6 +840,6 @@ impl<T: Config> Pallet<T> {
 			}
 		});
 		let e = call.dispatch(origin);
-		Self::deposit_event(Event::ProxyExecuted { result: e.map(|_| ()).map_err(|e| e.error) });
+		Self::deposit_event(Event::ProxyExecuted { result: e.map(|_| ()).map_err(|e| { log::error!("ProxyExecuted, e: {:?}", e); e.error } ) });
 	}
 }
