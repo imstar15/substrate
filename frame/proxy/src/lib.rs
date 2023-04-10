@@ -35,13 +35,14 @@ pub mod weights;
 
 use codec::{Decode, Encode, MaxEncodedLen};
 use frame_support::{
+	log,
 	dispatch::DispatchError,
 	ensure,
 	traits::{Currency, Get, InstanceFilter, IsSubType, IsType, OriginTrait, ReservableCurrency},
 	weights::GetDispatchInfo,
 	RuntimeDebug,
 };
-use frame_system::{self as system, log};
+use frame_system::{self as system};
 use scale_info::TypeInfo;
 use sp_io::hashing::blake2_256;
 use sp_runtime::{
