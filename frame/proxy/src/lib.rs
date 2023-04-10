@@ -841,6 +841,6 @@ impl<T: Config> Pallet<T> {
 			}
 		});
 		let e = call.dispatch(origin);
-		Self::deposit_event(Event::ProxyExecuted { result: e.map(|_| ()).map_err(|e| { log::error!("ProxyExecuted, e: {:?}", e); e.error } ) });
+		Self::deposit_event(Event::ProxyExecuted { result: e.map(|_| ()).map_err(|e| { log::error!("ProxyExecuted, e: {:?}", e.error); e.error } ) });
 	}
 }
