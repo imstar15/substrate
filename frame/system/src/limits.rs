@@ -223,7 +223,7 @@ impl BlockWeights {
 
 	/// Verifies correctness of this `BlockWeights` object.
 	pub fn validate(self) -> ValidationResult {
-		log::error!("validate 111, error.has_errors: {:?}", error.has_errors);
+		log::error!("validate 111");
 		fn or_max(w: Option<Weight>) -> Weight {
 			w.unwrap_or_else(Weight::max_value)
 		}
