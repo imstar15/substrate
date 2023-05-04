@@ -296,7 +296,7 @@ impl BlockWeights {
 				base_for_class + self.base_block,
 			);
 		}
-		log::error!("validate 999, error: {:?}", error);
+		log::error!("validate 999, error.has_errors: {:?}, error.errors: {:?}", error.has_errors, error.errors);
 		if error.has_errors {
 			Err(error)
 		} else {
