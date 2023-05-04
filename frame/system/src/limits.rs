@@ -244,6 +244,7 @@ impl BlockWeights {
 				"[{:?}] {:?} (total) has to be greater than {:?} (base block) & {:?} (base extrinsic)",
 				class, max_for_class, self.base_block, base_for_class,
 			);
+			log::error!("validate 444, [{:?}] {:?} (total) has to be greater than {:?} (base block) & {:?} (base extrinsic)", class, max_for_class, self.base_block, base_for_class);
 			log::error!("validate 444, error.has_errors: {:?}", error.has_errors);
 			// Max extrinsic can't be greater than max_for_class.
 			error_assert!(
