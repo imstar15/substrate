@@ -28,6 +28,7 @@
 use frame_support::{
 	dispatch::{DispatchClass, OneOrMany, PerDispatchClass},
 	weights::{constants, Weight},
+	log,
 };
 use scale_info::TypeInfo;
 use sp_runtime::{traits::Bounded, Perbill, RuntimeDebug};
@@ -403,30 +404,50 @@ impl BlockWeightsBuilder {
 	/// Construct the `BlockWeights` object.
 	pub fn build(self) -> ValidationResult {
 		// compute max extrinsic size
+		log::error!("build 111");
 		let Self { mut weights, init_cost } = self;
+		log::error!("build 222");
 
 		// compute max block size.
 		for class in DispatchClass::all() {
+			log::error!("build 333");
 			weights.max_block = match weights.per_class.get(*class).max_total {
-				Some(max) => max.max(weights.max_block),
-				_ => weights.max_block,
+				log::error!("build 444");
+				Some(max) => {
+					log::error!("build 555");
+					max.max(weights.max_block)
+				},
+				_ => {
+					log::error!("build 666");
+					weights.max_block
+				},
 			};
 		}
+
+		log::error!("build 777");
 		// compute max size of single extrinsic
 		if let Some(init_weight) = init_cost.map(|rate| rate * weights.max_block) {
+			log::error!("build 888");
 			for class in DispatchClass::all() {
+				log::error!("build aaa");
 				let per_class = weights.per_class.get_mut(*class);
+				log::error!("build bbb");
 				if per_class.max_extrinsic.is_none() && init_cost.is_some() {
+					log::error!("build ccc");
 					per_class.max_extrinsic = per_class
 						.max_total
 						.map(|x| x.saturating_sub(init_weight))
 						.map(|x| x.saturating_sub(per_class.base_extrinsic));
+					log::error!("build ddd");
 				}
 			}
 		}
-
+		
+		log::error!("build eee");
 		// Validate the result
-		weights.validate()
+		let result = weights.validate()
+		log::error!("build fff, result: {:?}", result);
+		result
 	}
 
 	/// Construct the `BlockWeights` object or panic if it's invalid.
