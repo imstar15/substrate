@@ -223,11 +223,12 @@ impl BlockWeights {
 
 	/// Verifies correctness of this `BlockWeights` object.
 	pub fn validate(self) -> ValidationResult {
+		log::error!("validate 111");
 		fn or_max(w: Option<Weight>) -> Weight {
 			w.unwrap_or_else(Weight::max_value)
 		}
 		let mut error = ValidationErrors::default();
-
+		log::error!("validate 222");
 		for class in DispatchClass::all() {
 			let weights = self.per_class.get(*class);
 			let max_for_class = or_max(weights.max_total);
@@ -235,6 +236,7 @@ impl BlockWeights {
 			let reserved = or_max(weights.reserved);
 			// Make sure that if total is set it's greater than base_block &&
 			// base_for_class
+			log::error!("validate 333");
 			error_assert!(
 				(max_for_class.all_gt(self.base_block) && max_for_class.all_gt(base_for_class))
 				|| max_for_class == Weight::zero(),
@@ -242,6 +244,7 @@ impl BlockWeights {
 				"[{:?}] {:?} (total) has to be greater than {:?} (base block) & {:?} (base extrinsic)",
 				class, max_for_class, self.base_block, base_for_class,
 			);
+			log::error!("validate 444");
 			// Max extrinsic can't be greater than max_for_class.
 			error_assert!(
 				weights
@@ -254,6 +257,7 @@ impl BlockWeights {
 				weights.max_extrinsic,
 				max_for_class.saturating_sub(base_for_class),
 			);
+			log::error!("validate 555");
 			// Max extrinsic should not be 0
 			error_assert!(
 				weights.max_extrinsic.unwrap_or_else(Weight::max_value).all_gt(Weight::zero()),
@@ -261,6 +265,7 @@ impl BlockWeights {
 				"[{:?}] {:?} (max_extrinsic) must not be 0. Check base cost and average initialization cost.",
 				class, weights.max_extrinsic,
 			);
+			log::error!("validate 666");
 			// Make sure that if reserved is set it's greater than base_for_class.
 			error_assert!(
 				reserved.all_gt(base_for_class) || reserved == Weight::zero(),
@@ -270,6 +275,7 @@ impl BlockWeights {
 				reserved,
 				base_for_class,
 			);
+			log::error!("validate 777");
 			// Make sure max block is greater than max_total if it's set.
 			error_assert!(
 				self.max_block.all_gte(weights.max_total.unwrap_or(Weight::zero())),
@@ -279,6 +285,7 @@ impl BlockWeights {
 				self.max_block,
 				weights.max_total,
 			);
+			log::error!("validate 888");
 			// Make sure we can fit at least one extrinsic.
 			error_assert!(
 				self.max_block.all_gt(base_for_class + self.base_block),
@@ -289,7 +296,7 @@ impl BlockWeights {
 				base_for_class + self.base_block,
 			);
 		}
-
+		log::error!("validate 999, error: {:?}", error);
 		if error.has_errors {
 			Err(error)
 		} else {
@@ -404,49 +411,30 @@ impl BlockWeightsBuilder {
 	/// Construct the `BlockWeights` object.
 	pub fn build(self) -> ValidationResult {
 		// compute max extrinsic size
-		log::error!("build 111");
 		let Self { mut weights, init_cost } = self;
-		log::error!("build 222");
 
 		// compute max block size.
 		for class in DispatchClass::all() {
-			log::error!("build 333");
 			weights.max_block = match weights.per_class.get(*class).max_total {
-				Some(max) => {
-					log::error!("build 555");
-					max.max(weights.max_block)
-				},
-				_ => {
-					log::error!("build 666");
-					weights.max_block
-				},
+				Some(max) => max.max(weights.max_block),
+				_ => weights.max_block,
 			};
 		}
-
-		log::error!("build 777");
 		// compute max size of single extrinsic
 		if let Some(init_weight) = init_cost.map(|rate| rate * weights.max_block) {
-			log::error!("build 888");
 			for class in DispatchClass::all() {
-				log::error!("build aaa");
 				let per_class = weights.per_class.get_mut(*class);
-				log::error!("build bbb");
 				if per_class.max_extrinsic.is_none() && init_cost.is_some() {
-					log::error!("build ccc");
 					per_class.max_extrinsic = per_class
 						.max_total
 						.map(|x| x.saturating_sub(init_weight))
 						.map(|x| x.saturating_sub(per_class.base_extrinsic));
-					log::error!("build ddd");
 				}
 			}
 		}
-		
-		log::error!("build eee");
+
 		// Validate the result
-		let result = weights.validate();
-		log::error!("build fff, result: {:?}", result);
-		result
+		weights.validate()
 	}
 
 	/// Construct the `BlockWeights` object or panic if it's invalid.
