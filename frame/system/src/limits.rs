@@ -412,7 +412,6 @@ impl BlockWeightsBuilder {
 		for class in DispatchClass::all() {
 			log::error!("build 333");
 			weights.max_block = match weights.per_class.get(*class).max_total {
-				log::error!("build 444");
 				Some(max) => {
 					log::error!("build 555");
 					max.max(weights.max_block)
