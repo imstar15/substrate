@@ -445,7 +445,7 @@ impl BlockWeightsBuilder {
 		
 		log::error!("build eee");
 		// Validate the result
-		let result = weights.validate()
+		let result = weights.validate();
 		log::error!("build fff, result: {:?}", result);
 		result
 	}
