@@ -264,7 +264,10 @@ where
 			// Defensive-only: first_term > second_term. Safe subtraction.
 			log::error!("TargetedFeeAdjustment::convert ooo");
 			let negative = first_term.saturating_sub(second_term).saturating_mul(previous);
-			log::error!("TargetedFeeAdjustment::convert ppp");
+			log::error!(
+				"TargetedFeeAdjustment::convert ppp previous: {:?}, negative: {:?}, min_multiplier: {:?}, max_multiplier: {:?}",
+				previous, negative, min_multiplier, max_multiplier,
+			);
 			let result = previous.saturating_sub(negative).clamp(min_multiplier, max_multiplier);
 			log::error!("TargetedFeeAdjustment::convert qqq");
 			result
