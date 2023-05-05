@@ -268,7 +268,9 @@ where
 				"TargetedFeeAdjustment::convert ppp previous: {:?}, negative: {:?}, min_multiplier: {:?}, max_multiplier: {:?}",
 				previous, negative, min_multiplier, max_multiplier,
 			);
-			let result = previous.saturating_sub(negative).clamp(min_multiplier, max_multiplier);
+			let result1 = previous.saturating_sub(negative);
+			log::error!("TargetedFeeAdjustment::convert ppp 222");
+			let result = result1.clamp(min_multiplier, max_multiplier);
 			log::error!("TargetedFeeAdjustment::convert qqq");
 			result
 		}
