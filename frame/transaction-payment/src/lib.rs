@@ -192,6 +192,7 @@ where
 	X: Get<Multiplier>,
 {
 	fn convert(previous: Multiplier) -> Multiplier {
+		log::error!("TargetedFeeAdjustment::convert !!!");
 		// Defensive only. The multiplier in storage should always be at most positive. Nonetheless
 		// we recover here in case of errors, because any value below this would be stale and can
 		// never change.
