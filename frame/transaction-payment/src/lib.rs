@@ -198,48 +198,76 @@ where
 		// we recover here in case of errors, because any value below this would be stale and can
 		// never change.
 		let min_multiplier = M::get();
+		log::error!("TargetedFeeAdjustment::convert 111");
 		let max_multiplier = X::get();
+		log::error!("TargetedFeeAdjustment::convert 222");
 		let previous = previous.max(min_multiplier);
+		log::error!("TargetedFeeAdjustment::convert 333");
 
 		let weights = T::BlockWeights::get();
+		log::error!("TargetedFeeAdjustment::convert 444");
 		// the computed ratio is only among the normal class.
 		let normal_max_weight =
 			weights.get(DispatchClass::Normal).max_total.unwrap_or(weights.max_block);
+		log::error!("TargetedFeeAdjustment::convert 555");
 		let current_block_weight = <frame_system::Pallet<T>>::block_weight();
+		log::error!("TargetedFeeAdjustment::convert 666");
 		let normal_block_weight =
 			current_block_weight.get(DispatchClass::Normal).min(normal_max_weight);
+		log::error!("TargetedFeeAdjustment::convert 777");
 
 		// TODO: Handle all weight dimensions
 		let normal_max_weight = normal_max_weight.ref_time();
+		log::error!("TargetedFeeAdjustment::convert 888");
 		let normal_block_weight = normal_block_weight.ref_time();
+		log::error!("TargetedFeeAdjustment::convert 999");
 
 		let s = S::get();
+		log::error!("TargetedFeeAdjustment::convert aaa");
 		let v = V::get();
+		log::error!("TargetedFeeAdjustment::convert bbb");
 
 		let target_weight = (s * normal_max_weight) as u128;
+		log::error!("TargetedFeeAdjustment::convert ccc");
 		let block_weight = normal_block_weight as u128;
+		log::error!("TargetedFeeAdjustment::convert ddd");
 
 		// determines if the first_term is positive
 		let positive = block_weight >= target_weight;
+		log::error!("TargetedFeeAdjustment::convert eee");
 		let diff_abs = block_weight.max(target_weight) - block_weight.min(target_weight);
+		log::error!("TargetedFeeAdjustment::convert fff");
 
 		// defensive only, a test case assures that the maximum weight diff can fit in Multiplier
 		// without any saturation.
 		let diff = Multiplier::saturating_from_rational(diff_abs, normal_max_weight.max(1));
+		log::error!("TargetedFeeAdjustment::convert ggg");
 		let diff_squared = diff.saturating_mul(diff);
+		log::error!("TargetedFeeAdjustment::convert hhh");
 
 		let v_squared_2 = v.saturating_mul(v) / Multiplier::saturating_from_integer(2);
+		log::error!("TargetedFeeAdjustment::convert iii");
 
 		let first_term = v.saturating_mul(diff);
+		log::error!("TargetedFeeAdjustment::convert jjj");
 		let second_term = v_squared_2.saturating_mul(diff_squared);
+		log::error!("TargetedFeeAdjustment::convert kkk");
 
 		if positive {
+			log::error!("TargetedFeeAdjustment::convert lll");
 			let excess = first_term.saturating_add(second_term).saturating_mul(previous);
-			previous.saturating_add(excess).clamp(min_multiplier, max_multiplier)
+			log::error!("TargetedFeeAdjustment::convert mmm");
+			let result = previous.saturating_add(excess).clamp(min_multiplier, max_multiplier);
+			log::error!("TargetedFeeAdjustment::convert nnn");
+			result
 		} else {
 			// Defensive-only: first_term > second_term. Safe subtraction.
+			log::error!("TargetedFeeAdjustment::convert ooo");
 			let negative = first_term.saturating_sub(second_term).saturating_mul(previous);
-			previous.saturating_sub(negative).clamp(min_multiplier, max_multiplier)
+			log::error!("TargetedFeeAdjustment::convert ppp");
+			let result = previous.saturating_sub(negative).clamp(min_multiplier, max_multiplier);
+			log::error!("TargetedFeeAdjustment::convert qqq");
+			result
 		}
 	}
 }
